@@ -1,3 +1,5 @@
+'use client';
+
 import MyCalendar from '../components/MyCalendar';
 // components 경로에서 import
 
