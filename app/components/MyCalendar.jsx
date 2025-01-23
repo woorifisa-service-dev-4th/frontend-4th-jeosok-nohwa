@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'; 
 import { useRouter } from 'next/navigation';
+import '../styles/custom-calendar.css';
 
 function MyCalendar() {
   const [value, onChange] = useState(new Date());
