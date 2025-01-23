@@ -1,0 +1,33 @@
+.modal-logo-container {
+  @apply flex items-center justify-center; /* 중앙 정렬 */
+  width: 40px; /* 버튼 크기와 동일한 크기로 설정 */
+  height: 40px;
+  position: relative; /* 다른 요소와 독립적으로 위치 */
+  overflow: hidden; /* 이미지를 컨테이너에 맞게 자름 */
+}
+
+.modal-overlay {
+  @apply fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px); /* Safari 호환 */
+}
+
+.modal-container {
+  @apply bg-white w-[300px] h-[600px] rounded-lg shadow-lg relative p-6;
+}
+
+.modal-header {
+  @apply flex items-center justify-between mb-4;
+}
+
+.modal-close {
+  @apply text-gray-500 hover:text-black focus:outline-none text-2xl;
+  @apply w-10 h-10 flex items-center justify-center; /* 크기와 정렬 */
+  position: relative; /* 위치 지정 */
+  z-index: 10; /* 클릭 우선순위 보장 */
+  cursor: pointer; /* 클릭 가능 표시 */
+}
+
+.modal-content {
+  @apply overflow-y-auto;
+}
