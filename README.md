@@ -1,1 +1,1 @@
-# 💪저속노화, jeoseok-nohwa💪
+# 💪저속노화, jeosok-nohwa💪
