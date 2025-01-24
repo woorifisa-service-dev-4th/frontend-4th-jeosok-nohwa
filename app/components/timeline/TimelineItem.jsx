@@ -3,7 +3,9 @@
 import React from 'react';
 import Image from 'next/image';
 
-const TimelineItem = ({ time, title, imageSrc }) => {
+const TimelineItem = ({ event }) => {
+  const { time, title, imageSrc } = event; // 객체 구조 분해로 데이터 추출
+
   return (
     <div className="w-[358px] h-[96px] bg-[#D9F7F3] rounded-2xl p-3 flex flex-col justify-between mb-2 relative">
       {/* 상단 (시간, 아이콘) */}
