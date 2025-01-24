@@ -6,7 +6,7 @@ import 'react-calendar/dist/Calendar.css';
 import { useRouter } from 'next/navigation';
 import '../styles/custom-calendar.css';
 
-function MyCalendar() {
+function MyCalendar({ onClickDay = () => {}, ...props }) {
   const [value, onChange] = useState(new Date());
   const [mark, setMark] = useState([]);
   const router = useRouter();
@@ -21,7 +21,8 @@ function MyCalendar() {
        locale="ko-KR"
        formatDay={(locale, date) => date.getDate().toString()}
        showNeighboringMonth={false} 
-       //onClickDay={handleDateClick}
+       onClickDay={onClickDay}
+       {...props}
        calendarType="gregory"
        minDetail="decade" // 세기 뷰를 비활성화
        maxDetail="month"

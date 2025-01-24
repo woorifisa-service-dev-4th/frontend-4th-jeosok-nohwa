@@ -1,6 +1,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import "react-calendar/dist/Calendar.css";
+import { useRouter } from 'next/navigation';
 import '../styles/custom-calendar.css';
 import "../components/ui/modal/modal.css"; 
 import '../styles/custom-calendar-modal.css';
@@ -17,6 +18,8 @@ const CalendarModal = ({ isOpen, onClose, selectedDate, onDateChange }) => {
       onClose(); // 모달 닫기 함수 호출
     }
   };
+
+  const router = useRouter();
   
   // 날짜 클릭 이벤트 핸들러
   const handleDateClick = (date) => {
