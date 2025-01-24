@@ -23,13 +23,12 @@ const ChatPage = () => {
     }
 
     function handleSend(message) {
-        if (!message.trim()) {
+        if (!message || !message.trim()) {
             console.log("Message is empty, skipping send.");
             return;
         }
 
         setMessages((prevMessages) => {
-            // 이전 메시지와 동일한 내용인지 확인
             const lastMessage = prevMessages[prevMessages.length - 1];
             if (lastMessage && lastMessage.text === message.trim()) {
                 console.log("Duplicate message, skipping.");
@@ -37,7 +36,7 @@ const ChatPage = () => {
             }
 
             const newMessage = {
-                text: message,
+                text: message.trim(),
                 isUser: true,
                 time: getCurrentTime(),
             };
@@ -47,10 +46,12 @@ const ChatPage = () => {
     }
 
 
+
     const handleKeyDown = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault(); // 기본 Enter 동작 방지
             if (!isProcessing) {
+                console.log("엔터 이벤트");
                 handleSend(); // Enter 키로 전송
             }
         }
