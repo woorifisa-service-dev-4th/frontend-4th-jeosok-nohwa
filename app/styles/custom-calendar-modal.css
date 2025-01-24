@@ -1,0 +1,11 @@
+
+.modal-container {
+    @apply bg-white w-[350px] h-[360px] rounded-lg shadow-lg relative p-6;
+  }
+
+
+/* 라벨 클릭 방지 */
+.react-calendar__navigation__label {
+    pointer-events: none; /* 클릭 불가 설정 */
+    cursor: default; /* 클릭 가능한 마우스 커서 제거 */
+  }

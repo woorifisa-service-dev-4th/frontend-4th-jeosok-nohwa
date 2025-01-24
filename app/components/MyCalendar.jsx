@@ -11,12 +11,7 @@ function MyCalendar() {
   const [mark, setMark] = useState([]);
   const router = useRouter();
 
-  // 날짜 클릭 이벤트 핸들러
-  const handleDateClick = (date) => {
-    const formattedDate = date.toISOString().split('T')[0]; // 날짜를 yyyy-mm-dd 형식으로 변환
-    router.push('/timeline'); // 타임라인 슬라이드로 이동
-  };
-
+  
 
   return (
     <div>
@@ -26,7 +21,7 @@ function MyCalendar() {
        locale="ko-KR"
        formatDay={(locale, date) => date.getDate().toString()}
        showNeighboringMonth={false} 
-       onClickDay={handleDateClick}
+       //onClickDay={handleDateClick}
        calendarType="gregory"
        minDetail="decade" // 세기 뷰를 비활성화
        maxDetail="month"

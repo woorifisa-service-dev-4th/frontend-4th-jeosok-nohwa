@@ -13,7 +13,7 @@
 }
 
 .modal-container {
-  @apply bg-white w-[300px] h-[600px] rounded-lg shadow-lg relative p-6;
+  @apply bg-white w-[300px] h-[400px] rounded-lg shadow-lg relative p-6;
 }
 
 .modal-header {
