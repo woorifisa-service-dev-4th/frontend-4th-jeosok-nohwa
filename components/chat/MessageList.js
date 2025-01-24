@@ -64,7 +64,7 @@ const MessageList = ({ messages }) => {
                                     wordBreak: "break-word", // 단어를 강제로 줄 바꿈
                                 }}
                             >
-                                <p className="text-sm text-gray-800">{msg.text}</p>
+                                <p className="text-sm text-mainGray">{msg.text}</p>
                             </div>
                         </div>
                     </div>

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useState, useRef } from "react";
 
 const ChatInput = ({ onSend = () => Promise.resolve() }) => {
@@ -17,48 +17,33 @@ const ChatInput = ({ onSend = () => Promise.resolve() }) => {
         }
     };
 
-    const handleSend = () => {
+
+    const handleSend = async () => {
         if (!message.trim() || isProcessing) {
             console.log("handleSend skipped: either empty message or already processing.");
             return;
         }
 
-        console.log("handleSend executed");
-        setIsProcessing(true);
+        setIsProcessing(true); // 처리 중 상태 설정
 
-        const sendResult = onSend(message);
-
-        if (sendResult && typeof sendResult.then === "function") {
-            sendResult
-                .then(() => {
-                    setMessage("");
-                    if (textareaRef.current) {
-                        textareaRef.current.style.height = "auto";
-                    }
-                })
-                .catch((error) => {
-                    console.error("Message send failed:", error);
-                })
-                .finally(() => {
-                    setIsProcessing(false);
-                });
-        } else {
-            console.error("onSend must return a Promise");
-            setIsProcessing(false);
+        try {
+            await onSend(message.trim());
+            setMessage(""); // 메시지 전송 성공 후 초기화
+            if (textareaRef.current) {
+                textareaRef.current.style.height = "auto";
+            }
+        } catch (error) {
+            console.error("Message send failed:", error);
+        } finally {
+            setIsProcessing(false); // 처리 중 상태 해제
         }
     };
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-
+            e.preventDefault(); // 기본 Enter 동작 방지
             if (!isProcessing) {
-                // 미리 message를 비워줌으로써 렌더링 문제 방지
-                setMessage("");
-                if (textareaRef.current) {
-                    textareaRef.current.style.height = "auto";
-                }
-                handleSend();
+                handleSend(); // Enter 키로 전송
             }
         }
     };
@@ -79,7 +64,7 @@ const ChatInput = ({ onSend = () => Promise.resolve() }) => {
             <button
                 onClick={() => {
                     if (!isProcessing) {
-                        handleSend();
+                        handleSend(); // 버튼 클릭으로 전송
                     }
                 }}
                 className={`ml-2 bg-transparent p-2 hover:opacity-80 ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}`}
