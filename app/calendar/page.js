@@ -1,12 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MyCalendar from '../components/MyCalendar';
 import NavBar from "../components/nav-bar";
 import Timeline from '../components/timeline/Timeline';
 
 export default function Page() {
-  const [selectedDate, setSelectedDate] = useState(null); // 선택된 날짜 상태
+  // 오늘 날짜를 초기값으로 설정
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const today = new Date();
+    return today.toLocaleDateString('en-CA'); // 'en-CA'는 YYYY-MM-DD 형식
+  });
+
   const exampleData = [
     {
       date: "2025-01-01",
@@ -15,45 +20,9 @@ export default function Page() {
       imageSrc: "/image/random1.png",
     },
     {
-      date: "2025-01-01",
-      time: "14:00-15:00",
-      title: "Team Collaboration Session",
-      imageSrc: "/image/random2.png",
-    },
-    {
-      date: "2025-01-01",
-      time: "19:00-20:00",
-      title: "Brainstorming Meeting",
-      imageSrc: "/image/random3.png",
-    },
-    {
-      date: "2025-01-02",
-      time: "09:00-10:00",
-      title: "Client Feedback Review",
-      imageSrc: "/image/random2.png",
-    },
-    {
-      date: "2025-01-24",
-      time: "11:00-12:00",
-      title: "Prepare Design Presentation",
-      imageSrc: "/image/random1.png",
-    },
-    {
       date: "2025-01-24",
       time: "09:00-10:00",
       title: "한글로 해보세요 알겟어요",
-      imageSrc: "/image/random2.png",
-    },
-    {
-      date: "2025-01-24",
-      time: "11:00-12:00",
-      title: "Prepare Design Presentation",
-      imageSrc: "/image/random1.png",
-    },
-    {
-      date: "2025-01-24",
-      time: "09:00-10:00",
-      title: "Client Feedback Review",
       imageSrc: "/image/random2.png",
     },
     {
@@ -84,9 +53,7 @@ export default function Page() {
   };
 
   // 선택된 날짜에 해당하는 이벤트 필터링
-  const filteredEvents = selectedDate
-    ? exampleData.filter(event => event.date === selectedDate)
-    : [];
+  const filteredEvents = exampleData.filter(event => event.date === selectedDate);
 
   return (
     <div>
