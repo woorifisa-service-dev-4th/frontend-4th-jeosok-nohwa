@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -17,6 +16,6 @@
 
 body {
   width: 390px;
-  height: 844px;
+  height: 737px;
   margin: 0 auto;
 }
