@@ -150,12 +150,6 @@
   }
   
   
-  .react-calendar__tile--active {
-    background: #F2FFFD;
-    width: 35px; /* 타일의 너비와 높이를 동일하게 설정 */
-    height: 35px;
-  }
-  
   .react-calendar--selectRange .react-calendar__tile--hover {
     background-color: #e6e6e6;
     width: 35px; /* 타일의 너비와 높이를 동일하게 설정 */
