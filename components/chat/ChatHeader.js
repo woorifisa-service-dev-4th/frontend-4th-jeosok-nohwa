@@ -1,6 +1,8 @@
+'use client'
 import Link from 'next/link';
 
 const ChatHeader = ({ date }) => {
+    console.log(date);
     return (
         <div className="flex items-center justify-between px-4 py-3 mt-12 bg-white w-[390px] mx-auto">
             <Link href="/home" className="text-gray-600 hover:text-gray-900">
@@ -19,7 +21,7 @@ const ChatHeader = ({ date }) => {
                     />
                 </svg>
             </Link>
-            <h1 className="text-lg font-semibold text-gray-900">{date}</h1>
+            <h1 className="text-lg font-semibold text-mainGray">{date}</h1>
             <div className="w-6"></div> {/* Placeholder for balanced layout */}
         </div>
     );
