@@ -2,10 +2,13 @@
 
 import React, { useState } from "react";
 import CalendarModal from "@/app/components/CalendarModal";
+import { useRouter } from 'next/navigation';
 
 const CalendarPage = () => {
+  
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
   const [selectedDate, setSelectedDate] = useState(null); // 선택된 날짜
+  const router = useRouter();
 
   const openModal = () => setIsModalOpen(true); // 모달 열기
   const closeModal = () => setIsModalOpen(false); // 모달 닫기
@@ -21,7 +24,6 @@ const CalendarPage = () => {
 
   return (
     <div>
-      <h1>캘린더 모달 테스트</h1>
       <p>
         선택된 날짜: {selectedDate ? selectedDate.toDateString() : "없음"}
       </p>
