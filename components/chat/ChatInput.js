@@ -24,14 +24,17 @@ const ChatInput = ({ onSend = () => Promise.resolve() }) => {
             return;
         }
 
+        console.log("handleSend executed");
         setIsProcessing(true); // 처리 중 상태 설정
 
+        const currentMessage = message.trim(); // 현재 메시지를 별도 변수에 저장
+
         try {
-            await onSend(message.trim());
-            setMessage(""); // 메시지 전송 성공 후 초기화
+            setMessage(""); // 상태를 미리 초기화
             if (textareaRef.current) {
                 textareaRef.current.style.height = "auto";
             }
+            await onSend(currentMessage); // 별도로 저장한 메시지를 전송
         } catch (error) {
             console.error("Message send failed:", error);
         } finally {
@@ -47,6 +50,7 @@ const ChatInput = ({ onSend = () => Promise.resolve() }) => {
             }
         }
     };
+
 
 
     return (

@@ -47,6 +47,17 @@ const ChatPage = () => {
     }
 
 
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault(); // 기본 Enter 동작 방지
+            if (!isProcessing) {
+                handleSend(); // Enter 키로 전송
+            }
+        }
+    };
+
+
+
 
 
     return (
