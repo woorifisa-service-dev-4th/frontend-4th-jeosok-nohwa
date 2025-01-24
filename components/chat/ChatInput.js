@@ -26,42 +26,27 @@ const ChatInput = ({ onSend = () => Promise.resolve() }) => {
         console.log("handleSend executed");
         setIsProcessing(true);
 
-        const sendResult = onSend(message);
-
-        if (sendResult && typeof sendResult.then === "function") {
-            sendResult
-                .then(() => {
-                    setMessage("");
-                    if (textareaRef.current) {
-                        textareaRef.current.style.height = "auto";
-                    }
-                })
-                .catch((error) => {
-                    console.error("Message send failed:", error);
-                })
-                .finally(() => {
-                    setIsProcessing(false);
-                });
-        } else {
-            console.error("onSend must return a Promise");
+        onSend(message.trim()).then(() => {
+            setMessage(""); // 메시지 전송 성공 후 상태 초기화
+            if (textareaRef.current) {
+                textareaRef.current.style.height = "auto";
+            }
             setIsProcessing(false);
-        }
+        }).catch((error) => {
+            console.error("Message send failed:", error);
+            setIsProcessing(false);
+        });
     };
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-
             if (!isProcessing) {
-                // 미리 message를 비워줌으로써 렌더링 문제 방지
-                setMessage("");
-                if (textareaRef.current) {
-                    textareaRef.current.style.height = "auto";
-                }
                 handleSend();
             }
         }
     };
+
 
 
     return (
