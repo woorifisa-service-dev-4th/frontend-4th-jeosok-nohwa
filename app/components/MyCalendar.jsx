@@ -25,7 +25,11 @@ function MyCalendar() {
        value={value}  
        locale="ko-KR"
        formatDay={(locale, date) => date.getDate().toString()}
+       showNeighboringMonth={false} 
        onClickDay={handleDateClick}
+       calendarType="gregory"
+       minDetail="decade" // 세기 뷰를 비활성화
+       maxDetail="month"
        tileContent={({ date, view }) =>
         mark?.includes(date.toISOString().split('T')[0]) ? (
           <div style={{ backgroundColor: 'red', borderRadius: '50%' }}>
