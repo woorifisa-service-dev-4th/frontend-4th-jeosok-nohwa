@@ -1,7 +1,7 @@
 import MyCalendar from '../components/MyCalendar';
 import NavBar from "../components/nav-bar";
 
-export default function CalandarPage() {
+export default function Page() {
   return (
     <div>
       <MyCalendar/>
