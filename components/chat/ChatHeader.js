@@ -1,7 +1,33 @@
 'use client'
 import Link from 'next/link';
+import React, { useState } from "react";
+import CalendarModal from "@/app/components/CalendarModal";
+import { useRouter } from 'next/navigation';
 
 const ChatHeader = ({ date }) => {
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(null);
+    const router = useRouter();
+    
+    const openModal = () => setIsModalOpen(true); 
+    const closeModal = () => setIsModalOpen(false); 
+    
+    const handleDateChange = (date) => {
+       setSelectedDate(date);
+       closeModal(); 
+    
+        // 페이지 이동 (예: 날짜별 페이지로 이동)
+        const formattedDate = date.toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          }).replace(/\. /g, '-').replace('.', '').trim();
+        const searchParams = new URLSearchParams({ date: formattedDate });
+
+        router.push(`/chat?${searchParams.toString()}`);
+     };
+
     console.log(date);
     return (
         <div className="flex items-center justify-between px-4 py-3 mt-12 bg-white w-[390px] mx-auto">
@@ -21,7 +47,13 @@ const ChatHeader = ({ date }) => {
                     />
                 </svg>
             </Link>
-            <h1 className="text-lg font-semibold text-mainGray">{date}</h1>
+            <button className="text-lg font-semibold text-mainGray" onClick={openModal}>{date}</button>
+             {/* CalendarModal 컴포넌트 */}
+            <CalendarModal
+              isOpen={isModalOpen}
+              onClose={closeModal}
+              onDateChange={handleDateChange}
+            />
             <div className="w-6"></div> {/* Placeholder for balanced layout */}
         </div>
     );
