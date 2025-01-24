@@ -24,29 +24,34 @@ const ChatInput = ({ onSend = () => Promise.resolve() }) => {
             return;
         }
 
-        setIsProcessing(true); // 처리 중 상태 설정
+        console.log("handleSend executed");
+        setIsProcessing(true);
+
+        const currentMessage = message.trim();
 
         try {
-            await onSend(message.trim());
-            setMessage(""); // 메시지 전송 성공 후 초기화
+            setMessage(""); // Clear the input field
             if (textareaRef.current) {
                 textareaRef.current.style.height = "auto";
             }
+            await onSend(currentMessage); // Use `onSend` directly
         } catch (error) {
             console.error("Message send failed:", error);
         } finally {
-            setIsProcessing(false); // 처리 중 상태 해제
+            setIsProcessing(false);
         }
     };
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault(); // 기본 Enter 동작 방지
-            if (!isProcessing) {
-                handleSend(); // Enter 키로 전송
+            e.preventDefault();
+            if (!isProcessing && message.trim()) {
+                handleSend(); // Prevent duplicate execution
             }
         }
     };
+
+
 
 
     return (
