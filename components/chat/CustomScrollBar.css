@@ -1,0 +1,22 @@
+/* 스크롤바 너비와 높이 설정 */
+::-webkit-scrollbar {
+    width: 8px; /* 세로 스크롤바 너비 */
+    height: 8px; /* 가로 스크롤바 높이 */
+}
+
+/* 스크롤바 트랙 (배경) 설정 */
+::-webkit-scrollbar-track {
+    background: transparent; /* 트랙을 투명하게 설정 */
+    margin-left: 12px; /* 트랙 왼쪽에 1px 여백 추가 */
+}
+
+/* 스크롤바 핸들 */
+::-webkit-scrollbar-thumb {
+    background: #EEEEEE; /* 핸들 색상 */
+    border-radius: 4px; /* 둥근 모양 */
+}
+
+/* 스크롤바 핸들 호버 시 */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; /* 스크롤 핸들 호버 시 색상 */
+}
