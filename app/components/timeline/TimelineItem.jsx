@@ -14,11 +14,10 @@ const TimelineItem = ({ time, title, imageSrc }) => {
           {/* 시간 */}
           <span className="text-gray-500 text-sm">{time}</span>
         </div>
-     
       </div>
 
       {/* 제목 */}
-      <div className="font-bold text-base text-gray-800 flex items-center h-full">
+      <div className="font-medium text-base text-mainGray flex items-center h-full px-2">
         {title}
       </div>
 
