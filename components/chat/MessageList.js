@@ -58,7 +58,7 @@ const MessageList = ({ messages }) => {
                                 />
                             )}
                             <div
-                                className={`px-4 py-2 rounded-lg ${msg.isUser ? "bg-gray-100 ml-0.5" : "bg-green-100"} break-words`}
+                                className={`px-4 py-2 rounded-lg ${msg.isUser ? "bg-gray-100 ml-0.5" : "bg-mainGreen"} break-words`}
                                 style={{
                                     maxWidth: "75%", // 화면의 70% 너비 제한
                                     wordBreak: "break-word", // 단어를 강제로 줄 바꿈

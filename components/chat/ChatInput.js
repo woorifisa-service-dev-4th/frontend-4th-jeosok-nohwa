@@ -1,3 +1,4 @@
+'use client'
 import { useState, useRef } from "react";
 
 const ChatInput = ({ onSend = () => Promise.resolve() }) => {
@@ -50,11 +51,18 @@ const ChatInput = ({ onSend = () => Promise.resolve() }) => {
     const handleKeyDown = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
+
             if (!isProcessing) {
+                // 미리 message를 비워줌으로써 렌더링 문제 방지
+                setMessage("");
+                if (textareaRef.current) {
+                    textareaRef.current.style.height = "auto";
+                }
                 handleSend();
             }
         }
     };
+
 
     return (
         <div className="flex items-center px-4 py-1 mb-8 bg-white w-[360px] mx-auto rounded-full border border-gray-300">
