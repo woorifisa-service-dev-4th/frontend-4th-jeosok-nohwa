@@ -14,7 +14,7 @@ function MyCalendar() {
   // 날짜 클릭 이벤트 핸들러
   const handleDateClick = (date) => {
     const formattedDate = date.toISOString().split('T')[0]; // 날짜를 yyyy-mm-dd 형식으로 변환
-    router.push('/chat'); // 채팅 페이지로 이동
+    router.push('/timeline'); // 타임라인 슬라이드로 이동
   };
 
 
@@ -30,6 +30,12 @@ function MyCalendar() {
        calendarType="gregory"
        minDetail="decade" // 세기 뷰를 비활성화
        maxDetail="month"
+       tileClassName={({ date }) => { // 일요일이면 'sunday' 클래스 추가
+        if (date.getDay() === 0) {
+          return 'sunday';
+        }
+        return '';
+      }}
        tileContent={({ date, view }) =>
         mark?.includes(date.toISOString().split('T')[0]) ? (
           <div style={{ backgroundColor: 'red', borderRadius: '50%' }}>
