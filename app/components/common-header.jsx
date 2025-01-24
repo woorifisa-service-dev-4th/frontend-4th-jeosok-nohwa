@@ -17,7 +17,9 @@ export default function CommonHeader() {
       month: '2-digit',
       day: '2-digit',
     }).replace(/\. /g, '-').replace('.', '').trim(); // "yyyy.mm.dd" 형식을 "yyyy-mm-dd"로 변환
-    router.push(`/chat/${formattedDate}`);
+    const searchParams = new URLSearchParams({ date: formattedDate });
+
+    router.push(`/chat?${searchParams.toString()}`);
   };
   
   return (

@@ -23,13 +23,17 @@ const CalendarModal = ({ isOpen, onClose, selectedDate, onDateChange }) => {
   
   // 날짜 클릭 이벤트 핸들러
   const handleDateClick = (date) => {
-    const formattedDate = date.toLocaleDateString('ko-KR', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    }).replace(/\. /g, '-').replace('.', '').trim(); // "yyyy.mm.dd" 형식을 "yyyy-mm-dd"로 변환
-    router.push(`/chat/${formattedDate}`);
-  };
+  const formattedDate = date.toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).replace(/\. /g, '-').replace('.', '').trim(); // "yyyy.mm.dd" 형식을 "yyyy-mm-dd"로 변환
+
+  const searchParams = new URLSearchParams({ date: formattedDate });
+
+  router.push(`/chat?${searchParams.toString()}`);
+};
+
   
 
   return (
