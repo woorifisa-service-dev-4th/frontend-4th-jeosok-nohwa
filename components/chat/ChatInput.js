@@ -29,16 +29,18 @@ const ChatInput = ({ onSend = () => Promise.resolve() }) => {
 
         const currentMessage = message.trim();
 
+        // 입력창과 높이 즉시 초기화
+        setMessage(""); // 입력창 내용 초기화
+        if (textareaRef.current) {
+            textareaRef.current.style.height = "auto"; // 높이 초기화
+        }
+
         try {
-            setMessage(""); // Clear the input field
-            if (textareaRef.current) {
-                textareaRef.current.style.height = "auto";
-            }
-            await onSend(currentMessage); // Use `onSend` directly
+            await onSend(currentMessage); // 메시지 전송 (비동기)
         } catch (error) {
             console.error("Message send failed:", error);
         } finally {
-            setIsProcessing(false);
+            setIsProcessing(false); // 전송 상태 초기화
         }
     };
 
@@ -46,13 +48,10 @@ const ChatInput = ({ onSend = () => Promise.resolve() }) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
             if (!isProcessing && message.trim()) {
-                handleSend(); // Prevent duplicate execution
+                handleSend();
             }
         }
     };
-
-
-
 
     return (
         <div className="flex items-center px-4 py-1 mb-8 bg-white w-[360px] mx-auto rounded-full border border-gray-300">
@@ -69,10 +68,12 @@ const ChatInput = ({ onSend = () => Promise.resolve() }) => {
             <button
                 onClick={() => {
                     if (!isProcessing) {
-                        handleSend(); // 버튼 클릭으로 전송
+                        handleSend();
                     }
                 }}
-                className={`ml-2 bg-transparent p-2 hover:opacity-80 ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}`}
+                className={`ml-2 bg-transparent p-2 hover:opacity-80 ${
+                    isProcessing ? "opacity-50 cursor-not-allowed" : ""
+                }`}
                 disabled={isProcessing}
             >
                 {isProcessing ? (

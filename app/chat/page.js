@@ -1,75 +1,86 @@
-"use client"
-import React, { useState } from "react";
-import { useSearchParams } from "next/navigation";
+'use client'
+import React, { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabaseClient";
 import ChatInput from "@/components/chat/ChatInput";
 import ChatHeader from "@/components/chat/ChatHeader";
 import MessageList from "@/components/chat/MessageList";
 
 const ChatPage = () => {
-    const [messages, setMessages] = useState([
-        { text: "오늘 삼겹살 먹었어", isUser: true, time: getCurrentTime() },
-        { text: "삼겹살이랑 김치나 다른 거는 안드셨나요?", isUser: false, time: getCurrentTime() },
-    ]);
-    const searchParams = useSearchParams();
-    const dateParam = searchParams.get("date");
-    const date = dateParam ? dateParam.replace(/-/g, ".") : "...";
+    const [messages, setMessages] = useState([]);
+    const currentUserId = 1; // 하드코딩된 사용자 ID 예시
 
-    function getCurrentTime() {
-        return new Date().toLocaleTimeString("ko-KR", {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false,
-        });
-    }
+    // 메시지 로드 함수
+    const fetchMessages = async () => {
+        const { data, error } = await supabase
+            .from("messages")
+            .select("*")
+            .eq("owner_id", currentUserId)
+            .order("created_at", { ascending: true });
 
-    function handleSend(message) {
-        if (!message || !message.trim()) {
-            console.log("Message is empty, skipping send.");
-            return;
-        }
-
-        setMessages((prevMessages) => {
-            const lastMessage = prevMessages[prevMessages.length - 1];
-            if (lastMessage && lastMessage.text === message.trim()) {
-                console.log("Duplicate message, skipping.");
-                return prevMessages;
-            }
-
-            const newMessage = {
-                text: message.trim(),
-                isUser: true,
-                time: getCurrentTime(),
-            };
-
-            return [...prevMessages, newMessage];
-        });
-    }
-
-
-
-    const handleKeyDown = (e) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault(); // 기본 Enter 동작 방지
-            if (!isProcessing) {
-                console.log("엔터 이벤트");
-                handleSend(); // Enter 키로 전송
-            }
+        if (error) {
+            console.error("Error fetching messages:", error);
+        } else {
+            setMessages(data);
         }
     };
 
+    // Realtime 구독
+    useEffect(() => {
+        fetchMessages();
 
+        const subscription = supabase
+            .channel("realtime:public:messages")
+            .on(
+                "postgres_changes",
+                {
+                    event: "INSERT",
+                    schema: "public",
+                    table: "messages",
+                    filter: `owner_id=eq.${currentUserId}`,
+                },
+                (payload) => {
+                    console.log("Realtime new message:", payload.new);
+                    setMessages((prevMessages) => [...prevMessages, payload.new]);
+                }
+            )
+            .subscribe();
 
+        return () => {
+            supabase.removeChannel(subscription);
+        };
+    }, []);
 
+    // 메시지 전송 핸들러
+    const handleSend = async (message) => {
+        if (!message.trim()) return;
+
+        const newMessage = {
+            text: message.trim(),
+            is_user: true,
+            owner_id: currentUserId,
+            created_at: new Date().toISOString(), // 로컬에서 생성 시간 설정
+        };
+
+        // 로컬 상태 업데이트
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+        // DB에 메시지 저장
+        const { error } = await supabase.from("messages").insert([newMessage]);
+
+        if (error) {
+            console.error("Error sending message to DB:", error);
+        } else {
+            console.log("Message successfully sent to DB.");
+        }
+    };
 
     return (
         <div className="flex flex-col h-screen bg-white">
-            <ChatHeader date={date || "..."} onBack={() => history.back()} />
+            <ChatHeader />
             <div className="flex-1 overflow-y-auto">
                 <MessageList messages={messages} />
             </div>
-            <div className="sticky bottom-0 bg-white z-10">
-                <ChatInput onSend={(message) => handleSend(message)} />
-            </div>
+            <ChatInput onSend={handleSend} />
         </div>
     );
 };
