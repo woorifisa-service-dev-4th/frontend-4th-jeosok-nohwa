@@ -2,31 +2,32 @@ import { useEffect, useRef } from 'react';
 import ProfileImage from "@/components/chat/ProfileImage";
 import "@/components/chat/CustomScrollBar.css";
 
-
 const MessageList = ({ messages }) => {
     const endOfMessagesRef = useRef(null);
+    console.log("Messages:", messages); // 디버깅용 로그
 
     useEffect(() => {
         endOfMessagesRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]); // 메시지 목록이 변경될 때마다 실행
 
+    if (!messages || !Array.isArray(messages)) {
+        console.error("Invalid messages:", messages);
+        return null;
+    }
+
     return (
         <div className="mt-16 mb-20 px-4 space-y-4 custom-scrollbar">
             {messages.map((msg, index) => {
-                const currentDate = new Date();
-                const msgDate = new Date();
-                if (msg.time !== "now") {
-                    const [hours, minutes] = msg.time.split(":");
-                    msgDate.setHours(hours, minutes, 0, 0);
-                }
+                const msgDate = new Date(msg.created_at); // `created_at`을 Date 객체로 변환
+                const previousDate =
+                    index > 0 ? new Date(messages[index - 1]?.created_at) : null;
 
-                const previousDate = index > 0 && new Date();
-                if (index > 0 && messages[index - 1].time !== "now") {
-                    const [prevHours, prevMinutes] = messages[index - 1].time.split(":");
-                    previousDate.setHours(prevHours, prevMinutes, 0, 0);
-                }
+                // 6시간 이상의 시간 간격 여부 확인
+                const isTimeGap =
+                    index === 0 || // 첫 메시지인 경우
+                    (previousDate && msgDate - previousDate >= 6 * 60 * 60 * 1000); // 6시간 이상 간격
 
-                const isTimeGap = index === 0 || (previousDate && msgDate - previousDate >= 6 * 60 * 60 * 1000);
+
 
                 return (
                     <div key={index}>
@@ -35,11 +36,10 @@ const MessageList = ({ messages }) => {
                             <div className="flex items-center justify-center my-2">
                                 <div className="border-t border-gray-300 w-full mx-4"></div>
                                 <span className="text-gray-400 text-sm px-2">
-                                    {msg.time === "now"
-                                        ? "now"
-                                        : msg.time || currentDate.toLocaleTimeString([], {
+                                    {msgDate.toLocaleTimeString([], {
                                         hour: "2-digit",
                                         minute: "2-digit",
+                                        hour12: false, // 24시간 형식 사용
                                     })}
                                 </span>
                                 <div className="border-t border-gray-300 w-full mx-4"></div>
@@ -48,9 +48,11 @@ const MessageList = ({ messages }) => {
 
                         {/* 메시지 표시 */}
                         <div
-                            className={`flex items-center ${msg.isUser ? "justify-end" : "justify-start"}`}
+                            className={`flex items-center ${
+                                msg.is_user ? "justify-end" : "justify-start"
+                            }`}
                         >
-                            {!msg.isUser && (
+                            {!msg.is_user && (
                                 <ProfileImage
                                     className="px-18"
                                     src="/image/jeosok-nohwa-logo.png"
@@ -58,7 +60,9 @@ const MessageList = ({ messages }) => {
                                 />
                             )}
                             <div
-                                className={`px-4 py-2 rounded-lg ${msg.isUser ? "bg-gray-100 ml-0.5" : "bg-mainGreen"} break-words`}
+                                className={`px-4 py-2 rounded-lg ${
+                                    msg.is_user ? "bg-gray-100 ml-0.5" : "bg-mainGreen"
+                                } break-words`}
                                 style={{
                                     maxWidth: "75%", // 화면의 70% 너비 제한
                                     wordBreak: "break-word", // 단어를 강제로 줄 바꿈
