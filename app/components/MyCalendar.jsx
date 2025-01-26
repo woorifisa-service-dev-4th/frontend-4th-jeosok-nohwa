@@ -3,50 +3,38 @@
 import React, { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'; 
-import { useRouter } from 'next/navigation';
 import '../styles/custom-calendar.css';
 
-function MyCalendar() {
+function MyCalendar({ onClickDay = () => {}, ...props }) {
   const [value, onChange] = useState(new Date());
-  const [mark, setMark] = useState([]);
-  const router = useRouter();
 
-  // 날짜 클릭 이벤트 핸들러
-  const handleDateClick = (date) => {
-    const formattedDate = date.toISOString().split('T')[0]; // 날짜를 yyyy-mm-dd 형식으로 변환
-    router.push('/timeline'); // 타임라인 슬라이드로 이동
+  const handleClickDay = (date) => {
+    onClickDay(date); // 부모 컴포넌트에 선택된 날짜 전달
+    onChange(date);   // 캘린더 상태 업데이트
   };
-
 
   return (
     <div>
       <Calendar
-       onChange={onChange}
-       value={value}  
-       locale="ko-KR"
-       formatDay={(locale, date) => date.getDate().toString()}
-       showNeighboringMonth={false} 
-       onClickDay={handleDateClick}
-       calendarType="gregory"
-       minDetail="decade" // 세기 뷰를 비활성화
-       maxDetail="month"
-       tileClassName={({ date }) => { // 일요일이면 'sunday' 클래스 추가
-        if (date.getDay() === 0) {
-          return 'sunday';
-        }
-        return '';
-      }}
-       tileContent={({ date, view }) =>
-        mark?.includes(date.toISOString().split('T')[0]) ? (
-          <div style={{ backgroundColor: 'red', borderRadius: '50%' }}>
-            {date.getDate()}
-          </div>
-        ) : null
-      }
-    />
-  </div>
-);
+        onChange={onChange}
+        value={value}  
+        locale="ko-KR"
+        formatDay={(locale, date) => date.getDate().toString()}
+        showNeighboringMonth={false} 
+        onClickDay={handleClickDay} // handleClickDay 함수로 변경
+        {...props}
+        calendarType="gregory"
+        minDetail="decade"
+        maxDetail="month"
+        tileClassName={({ date }) => {
+          if (date.getDay() === 0) {
+            return 'sunday';
+          }
+          return '';
+        }}
+      />
+    </div>
+  );
 }
 
-
-export default  MyCalendar;
+export default MyCalendar;

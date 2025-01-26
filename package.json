@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@supabase/supabase-js": "^2.48.1",
     "next": "15.1.6",
     "react": "^19.0.0",
     "react-calendar": "^5.1.0",
@@ -18,8 +19,6 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@types/node": "22.10.9",
-    "@types/react": "19.0.7",
     "eslint": "^9",
     "eslint-config-next": "15.1.6",
     "postcss": "^8",

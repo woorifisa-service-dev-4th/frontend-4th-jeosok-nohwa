@@ -1,0 +1,42 @@
+.timeline-wrapper {
+    width: 390px; /* 너비를 390px로 고정 */
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    margin: 0; /* 왼쪽으로 붙이기 */
+    text-align: left; /* 텍스트 왼쪽 정렬 */
+    max-height: 350px; /* 3개의 리스트가 보이도록 높이 고정 */
+    overflow-y: hidden; /* 기본적으로 스크롤바 숨김 */
+    overflow-x: hidden; /* 가로 스크롤 제거 */
+  }
+  
+  /* Hover 상태에서 스크롤바 활성화 */
+  .timeline-wrapper:hover {
+    overflow-y: scroll; /* 세로 스크롤 활성화 */
+  }
+  
+  /* 기본적으로 스크롤바 숨김 */
+  .timeline-wrapper::-webkit-scrollbar {
+    width: 6px; /* 기본 스크롤바 너비 */
+    background: transparent; /* 기본 상태에서는 투명 처리 */
+  }
+  
+  /* Hover 상태에서 스크롤바 스타일 */
+  .timeline-wrapper:hover::-webkit-scrollbar {
+    width: 6px; /* Hover 시 스크롤바 너비 */
+  }
+  
+  .timeline-wrapper:hover::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2); /* 연한 검은색 (투명도 0.2) */
+    border-radius: 4px; /* 둥근 스크롤바 */
+    transition: background-color 0.2s ease-in-out; /* 부드러운 전환 */
+  }
+  
+  .timeline-wrapper:hover::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3); /* 호버 시 조금 더 진한 색상 */
+  }
+  
+  .timeline-wrapper:hover::-webkit-scrollbar-track {
+    background: transparent; /* 트랙 투명 처리 */
+  }
+  

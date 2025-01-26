@@ -1,146 +1,146 @@
 
 .react-calendar {
-    width: 390px;
-    max-width: 100%;
-    background: white;
-    color: #595959!important;
-    border: none;
-    font-family: 'Arial', 'Helvetica', sans-serif;
-    line-height: 1.125em;
-  }
-  
-  .react-calendar__navigation__prev2-button,
-  .react-calendar__navigation__next2-button {
-     display: none;
-  }
+  width: 390px;
+  max-width: 100%;
+  background: white;
+  color: #595959!important;
+  border: none;
+  font-family: 'Arial', 'Helvetica', sans-serif;
+  line-height: 1.125em;
+}
+
+.react-calendar__navigation__prev2-button,
+.react-calendar__navigation__next2-button {
+   display: none;
+}
 
 
-  .react-calendar__navigation button:enabled:hover, .react-calendar__navigation button:enabled:focus {
-    background-color:white;
-  }
+.react-calendar__navigation button:enabled:hover, .react-calendar__navigation button:enabled:focus {
+  background-color:white;
+}
 
 
-  .react-calendar__navigation__label[disabled] {
-    background-color: white !important; /* 배경색을 흰색으로 설정 */
-    color: #2D2D2D!important;/* 텍스트 색상을 검정으로 설정 */
-    opacity: 1 !important; /* 비활성화 상태의 투명도 제거 */
-    cursor: not-allowed; /* 비활성화 상태를 표시하는 마우스 커서 */
-    border: none; /* 테두리 제거 */
-  }
-  
+.react-calendar__navigation__label[disabled] {
+  background-color: white !important; /* 배경색을 흰색으로 설정 */
+  color: #2D2D2D!important;/* 텍스트 색상을 검정으로 설정 */
+  opacity: 1 !important; /* 비활성화 상태의 투명도 제거 */
+  cursor: not-allowed; /* 비활성화 상태를 표시하는 마우스 커서 */
+  border: none; /* 테두리 제거 */
+}
 
-  /* 일요일만 빨간색 */
+
+/* 일요일만 빨간색 */
 .react-calendar__month-view__days__day.sunday {
-  color: #E85E5E !important;
+color: #E85E5E !important;
 }
 
 /* 토요일과 충돌 방지 */
 .react-calendar__month-view__days__day:not(.sunday) {
-  color: #595959!important;
+color: #595959!important;
 }
 
 
 
 .react-calendar__month-view__weekdays__weekday {
-  font-size: 14px;
+font-size: 14px;
 }
 .react-calendar__month-view__weekdays__weekday abbr {
-  text-decoration: none !important; /* 밑줄 제거 */
+text-decoration: none !important; /* 밑줄 제거 */
 }
-  
-  
-  
-  .react-calendar__tile {
-    max-width: none;
-    padding: 10px 6.6667px;
-    background: none;
-    text-align: center;
-    font: inherit;
-    border-radius: 10%;
-    font-size: 0.833em;
-    margin:2px;
-  }
-  
-  .react-calendar__tile:disabled {
-    background-color: #f0f0f0;
-    color: #ababab;
-    width: 35px; /* 타일의 너비와 높이를 동일하게 설정 */
-    height: 35px;
-    
-  }
-  
-  .react-calendar__month-view__days__day--neighboringMonth:disabled,
-  .react-calendar__decade-view__years__year--neighboringDecade:disabled,
-  .react-calendar__century-view__decades__decade--neighboringCentury:disabled {
-    color: #cdcdcd;
-    width: 35px; /* 타일의 너비와 높이를 동일하게 설정 */
-    height: 35px;
-    
-  }
 
-  /* 오늘 날짜 스타일 제거 - Month, Year View */
+
+
+.react-calendar__tile {
+  max-width: none;
+  padding: 10px 6.6667px;
+  background: none;
+  text-align: center;
+  font: inherit;
+  border-radius: 10%;
+  font-size: 0.833em;
+  margin:2px;
+}
+
+.react-calendar__tile:disabled {
+  background-color: #f0f0f0;
+  color: #ababab;
+  width: 35px; /* 타일의 너비와 높이를 동일하게 설정 */
+  height: 35px;
+  
+}
+
+.react-calendar__month-view__days__day--neighboringMonth:disabled,
+.react-calendar__decade-view__years__year--neighboringDecade:disabled,
+.react-calendar__century-view__decades__decade--neighboringCentury:disabled {
+  color: #cdcdcd;
+  width: 35px; /* 타일의 너비와 높이를 동일하게 설정 */
+  height: 35px;
+  
+}
+
+/* 오늘 날짜 스타일 제거 - Month, Year View */
 .react-calendar__year-view .react-calendar__tile--now,
 .react-calendar__decade-view .react-calendar__tile--now,
 .react-calendar__century-view .react-calendar__tile--now {
-  background-color: transparent !important; /* 배경 제거 */
-  color: inherit !important; /* 기본 텍스트 색상 유지 */
-  font-weight: normal !important; /* 텍스트 굵기 제거 */
-  border-radius: 0 !important; /* 모양 초기화 */
+background-color: transparent !important; /* 배경 제거 */
+color: inherit !important; /* 기본 텍스트 색상 유지 */
+font-weight: normal !important; /* 텍스트 굵기 제거 */
+border-radius: 0 !important; /* 모양 초기화 */
 }
 
-  /* 연도 및 월 선택에서 Hover와 Focus 스타일 변경 */
+/* 연도 및 월 선택에서 Hover와 Focus 스타일 변경 */
 .react-calendar__year-view .react-calendar__tile:enabled:hover,
 .react-calendar__year-view .react-calendar__tile:enabled:focus,
 .react-calendar__decade-view .react-calendar__tile:enabled:hover,
 .react-calendar__decade-view .react-calendar__tile:enabled:focus,
 .react-calendar__century-view .react-calendar__tile:enabled:hover,
 .react-calendar__century-view .react-calendar__tile:enabled:focus {
-  background-color: white !important; /* Hover 및 Focus 배경을 흰색으로 설정 */
-  color: black !important; /* 텍스트 색상 유지 */
-  border-radius: 10%; /* 모양 유지 */
-  width: 35px;
-  height: 35px;
-  line-height: normal;
+background-color: white !important; /* Hover 및 Focus 배경을 흰색으로 설정 */
+color: black !important; /* 텍스트 색상 유지 */
+border-radius: 10%; /* 모양 유지 */
+width: 35px;
+height: 35px;
+line-height: normal;
 }
 
 
 
 
 
+
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color:  #F2FFFD;
+  width: 35px; /* 타일의 너비와 높이를 동일하게 설정 */
+  height: 35px;
+  padding: 0px;
   
-  .react-calendar__tile:enabled:hover,
-  .react-calendar__tile:enabled:focus {
-    background-color:  #F2FFFD;
-    width: 35px; /* 타일의 너비와 높이를 동일하게 설정 */
-    height: 35px;
-    padding: 0px;
-    
-  }
-  
-  .react-calendar__month-view__days__day--now {
-    background: #F2FFFD  !important;  
-    color:black !important;
-    width: 35px; /* 타일의 너비와 높이를 동일하게 설정 */
-    height: 35px;
-  }
-  
-  /* 오늘 날짜 Hover와 Active 통일 */
+}
+
+.react-calendar__month-view__days__day--now {
+  background: #F2FFFD  !important;  
+  color:black !important;
+  width: 35px; /* 타일의 너비와 높이를 동일하게 설정 */
+  height: 35px;
+}
+
+/* 오늘 날짜 Hover와 Active 통일 */
 .react-calendar__tile--now:enabled:hover,
 .react-calendar__tile--active {
-  background: #D9F7F3  !important; /* Hover 및 Active 색상 통일 */
-  color: black !important; /* 텍스트 색상 통일 */
-  width: 35px;
-  height: 35px;
-  border-radius: 10%;
+background: #D9F7F3  !important; /* Hover 및 Active 색상 통일 */
+color: black !important; /* 텍스트 색상 통일 */
+width: 35px;
+height: 35px;
+border-radius: 10%;
 }
+
+.react-calendar__tile--hasActive {
+  background: #F2FFFD;
+  width: 35px; /* 타일의 너비와 높이를 동일하게 설정 */
+  height: 35px;
   
-  .react-calendar__tile--hasActive {
-    background: #F2FFFD;
-    width: 35px; /* 타일의 너비와 높이를 동일하게 설정 */
-    height: 35px;
-    
-  }
-  
+}
+
   .react-calendar__tile--hasActive:enabled:hover,
   .react-calendar__tile--hasActive:enabled:focus {
     background: #F2FFFD;
@@ -150,12 +150,6 @@
   }
   
   
-  .react-calendar__tile--active {
-    background: #F2FFFD;
-    width: 35px; /* 타일의 너비와 높이를 동일하게 설정 */
-    height: 35px;
-  }
-  
   .react-calendar--selectRange .react-calendar__tile--hover {
     background-color: #e6e6e6;
     width: 35px; /* 타일의 너비와 높이를 동일하게 설정 */
@@ -164,6 +158,11 @@
   }
 
 
-  
-  
-  
+
+
+.react-calendar__tile--active {
+  background: #F2FFFD;
+  width: 35px; /* 타일의 너비와 높이를 동일하게 설정 */
+  height: 35px;
+}
+
