@@ -5,9 +5,10 @@ import { useEffect } from "react";
 export default function ClientViewportHandler() {
     useEffect(() => {
         function setViewportHeight() {
+            const viewportHeight = document.documentElement.clientHeight;
             document.documentElement.style.setProperty(
                 "--vh",
-                `${window.innerHeight * 0.01}px`
+                `${viewportHeight * 0.01}px`
             );
         }
 

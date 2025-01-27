@@ -20,7 +20,7 @@
 body {
   font-family: "Noto Sans KR", sans-serif;
   width: 390px;
-  height: calc(var(--vh, 1vh) * 100); /* 동적 높이 계산 */
+  height: 100svh; /* 동적 높이 계산 */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -28,7 +28,9 @@ body {
   align-items: center;
   overflow: hidden;
 }
+
 :root {
   --vh: 1vh; /* 초기값 설정 */
 }
+
 
