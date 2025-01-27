@@ -31,7 +31,7 @@ const ChatHeader = ({ date }) => {
     console.log(date);
     return (
         <div className="flex items-center justify-between px-4 py-3 mt-12 bg-white w-[390px] mx-auto">
-            <Link href="/home" className="text-gray-600 hover:text-gray-900">
+            <Link href="/home" className="text-mainGray hover:text-gray-900">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6"
@@ -47,7 +47,7 @@ const ChatHeader = ({ date }) => {
                     />
                 </svg>
             </Link>
-            <button className="text-lg font-semibold text-mainGray" onClick={openModal}>{date}</button>
+            <button className="text-lg font-400 text-mainGray" onClick={openModal}>{date}</button>
              {/* CalendarModal 컴포넌트 */}
             <CalendarModal
               isOpen={isModalOpen}

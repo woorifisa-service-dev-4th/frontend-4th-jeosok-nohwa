@@ -1,3 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+
+
+/* 헤더 부분 (예: 월, 연도) */
+.react-calendar__navigation {
+  font-family: "Noto Sans KR", sans-serif;
+  font-weight: 400; /* 굵기 조정 */
+  color: #595959!important;
+}
+
+/* 요일 부분 (일 ~ 토) */
+.react-calendar__month-view__weekdays {
+  font-family: "Noto Sans KR", sans-serif;
+  font-weight: 400; /* 중간 굵기 */
+}
+
+/* 날짜 타일 (일반 날짜들) */
+.react-calendar__tile {
+  font-family: "Noto Sans KR", sans-serif;
+  font-weight: 400; /* 기본 폰트 굵기 */
+}
+
+/* 선택된 날짜 */
+.react-calendar__tile--active {
+  font-family: "Noto Sans KR", sans-serif;
+  font-weight: 600;
+}
 
 .react-calendar {
   width: 390px;
@@ -5,7 +33,7 @@
   background: white;
   color: #595959!important;
   border: none;
-  font-family: 'Arial', 'Helvetica', sans-serif;
+  font-family: "Noto Sans KR", sans-serif; /* Noto Sans KR 폰트 적용 */
   line-height: 1.125em;
 }
 
