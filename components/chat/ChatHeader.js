@@ -30,32 +30,37 @@ const ChatHeader = ({ date }) => {
 
     console.log(date);
     return (
-        <div className="flex items-center justify-between px-4 py-3 mt-12 bg-white w-[390px] mx-auto">
-            <Link href="/home" className="text-mainGray hover:text-gray-900">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 19l-7-7 7-7"
-                    />
-                </svg>
-            </Link>
-            <button className="text-lg font-400 text-mainGray" onClick={openModal}>{date}</button>
-             {/* CalendarModal 컴포넌트 */}
-            <CalendarModal
-              isOpen={isModalOpen}
-              onClose={closeModal}
-              onDateChange={handleDateChange}
-            />
-            <div className="w-6"></div> {/* Placeholder for balanced layout */}
-        </div>
+
+            <div className="flex items-center justify-between px-4 py-3 mt-14 bg-white w-[390px] mx-auto">
+                <Link href="/home" className="text-mainGray hover:text-gray-900">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 19l-7-7 7-7"
+                        />
+                    </svg>
+                </Link>
+                <button className="text-lg font-400 text-mainGray" onClick={openModal}>
+                    {date}
+                </button>
+                <CalendarModal
+                    isOpen={isModalOpen}
+                    onClose={closeModal}
+                    onDateChange={handleDateChange}
+                />
+                <div className="w-6"></div>
+            </div>
+
+
+
     );
 };
 
