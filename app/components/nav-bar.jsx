@@ -31,8 +31,8 @@ export default function NavBar() {
         <li
           className={`text-[9px] font-light tracking-tight ${
             pathname === "/home" || active === "/home"
-              ? "text-gray-500"
-              : "text-gray-400"
+              ? "text-gray-700"
+              : "text-gray-500"
           } transition-transform duration-300 ease-in-out transform hover:text-gray-700 ${
             pathname === "/home" || active === "/home"
               ? "scale-110"
@@ -45,7 +45,7 @@ export default function NavBar() {
               {pathname === "/home" || active === "/home" ? (
                 <SolidHomeIcon className="w-6 h-6 fill-[#D9F7F3] stroke-[#b1f1e8] stroke-[0.5]" />
               ) : (
-                <OutlineHomeIcon className="w-6 h-6 stroke-gray-400 hover:stroke-gray-700 stroke-[0.5]" />
+                <OutlineHomeIcon className="w-6 h-6 stroke-gray-950 hover:stroke-gray-900 stroke-[0.5]" />
               )}
               <div>홈</div>
             </div>
@@ -54,8 +54,8 @@ export default function NavBar() {
         <li
           className={`text-[9px] font-light tracking-tight ${
             pathname === "/ranking" || active === "/ranking"
-              ? "text-gray-500"
-              : "text-gray-400"
+                ? "text-gray-700"
+                : "text-gray-500"
           } transition-transform duration-300 ease-in-out transform hover:text-gray-700 ${
             pathname === "/ranking" || active === "/ranking"
               ? "scale-110"
@@ -68,7 +68,7 @@ export default function NavBar() {
               {pathname === "/ranking" || active === "/ranking" ? (
                 <SolidStarIcon className="w-6 h-6 fill-[#D9F7F3] stroke-[#b1f1e8] stroke-[0.5]" />
               ) : (
-                <OutlineStarIcon className="w-6 h-6 stroke-gray-400 hover:stroke-gray-700 stroke-[0.5]" />
+                <OutlineStarIcon className="w-6 h-6 stroke-gray-950 hover:stroke-gray-900 stroke-[0.5]" />
               )}
               <div>랭킹</div>
             </div>
@@ -77,8 +77,8 @@ export default function NavBar() {
         <li
           className={`text-[9px] font-light tracking-tight ${
             pathname === "/timeline" || active === "/timeline"
-              ? "text-gray-500"
-              : "text-gray-400"
+                ? "text-gray-700"
+                : "text-gray-500"
           } transition-transform duration-300 ease-in-out transform hover:text-gray-700 ${
             pathname === "/timeline" || active === "/timeline"
               ? "scale-110"
@@ -91,7 +91,7 @@ export default function NavBar() {
               {pathname === "/timeline" || active === "/timeline" ? (
                 <SolidNewspaperIcon className="w-6 h-6 fill-[#D9F7F3] stroke-[#b1f1e8] stroke-[0.5]" />
               ) : (
-                <OutlineNewspaperIcon className="w-6 h-6 stroke-gray-400 hover:stroke-gray-700 stroke-[0.5]" />
+                <OutlineNewspaperIcon className="w-6 h-6 stroke-gray-950 hover:stroke-gray-900 stroke-[0.5]" />
               )}
               <div>타임라인</div>
             </div>
@@ -100,8 +100,8 @@ export default function NavBar() {
         <li
           className={`text-[9px] font-light tracking-tight ${
             pathname === "/profile" || active === "/profile"
-              ? "text-gray-500"
-              : "text-gray-400"
+                ? "text-gray-700"
+                : "text-gray-500"
           } transition-transform duration-300 ease-in-out transform hover:text-gray-700 ${
             pathname === "/profile" || active === "/profile"
               ? "scale-110"
@@ -114,7 +114,7 @@ export default function NavBar() {
               {pathname === "/profile" || active === "/profile" ? (
                 <SolidFaceSmileIcon className="w-6 h-6 fill-[#D9F7F3] stroke-[#b1f1e8] stroke-[0.5]" />
               ) : (
-                <OutlineFaceSmileIcon className="w-6 h-6 stroke-gray-400 hover:stroke-gray-700 stroke-[0.5]" />
+                <OutlineFaceSmileIcon className="w-6 h-6 stroke-gray-950 hover:stroke-gray-900 stroke-[0.5]" />
               )}
               <div>프로필</div>
             </div>
