@@ -87,6 +87,34 @@ text-decoration: none !important; /* 밑줄 제거 */
   border-radius: 10%;
   font-size: 0.833em;
   margin:2px;
+  overflow: visible !important;
+}
+
+.react-calendar__tile--active {
+  background: #F2FFFD;
+  width: 35px; /* 타일의 너비와 높이를 동일하게 설정 */
+  height: 35px;
+  overflow: visible;
+  z-index: 1;
+
+}
+
+.dot-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: visible;
+}
+
+.dot {
+  height: 6px;
+  width: 6px;
+  background-color: #89E9E1;  /* 원하는 색상으로 변경 가능 */
+  border-radius: 50%;
+  position: absolute;
+  bottom: -10px; 
+  z-index: 2; /* 선택된 날짜의 배경보다 앞에 배치 */
 }
 
 .react-calendar__tile:disabled {
@@ -188,9 +216,5 @@ border-radius: 10%;
 
 
 
-.react-calendar__tile--active {
-  background: #F2FFFD;
-  width: 35px; /* 타일의 너비와 높이를 동일하게 설정 */
-  height: 35px;
-}
+
 
