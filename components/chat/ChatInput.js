@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef } from "react";
 
-const ChatInput = ({ onSend = () => Promise.resolve() }) => {
+const ChatInput = ({ onSend = () => Promise.resolve(), onStreamUpdate }) => {
     const [message, setMessage] = useState("");
     const [isProcessing, setIsProcessing] = useState(false);
     const textareaRef = useRef(null);
@@ -17,37 +17,87 @@ const ChatInput = ({ onSend = () => Promise.resolve() }) => {
     };
 
     const handleSend = async () => {
-        if (!message.trim() || isProcessing) {
-            console.log("handleSend skipped: either empty message or already processing.");
-            return;
-        }
+        if (!message.trim() || isProcessing) return;
 
-        console.log("handleSend executed");
         setIsProcessing(true);
-
-        const currentMessage = message.trim();
+        const userMessage = { content: message.trim(), is_user: true, role: "user" };
 
         try {
-            await onSend(currentMessage); // 메시지 전송 (비동기)
+            // 사용자 메시지를 즉시 반영
+            await onSend(message.trim(), true);
 
             // 메시지 전송 성공 시 입력창 초기화
-            setMessage(""); // React 상태 초기화
+            setMessage("");
             if (textareaRef.current) {
                 textareaRef.current.style.height = "auto"; // 높이 초기화
             }
+            console.log("Sending request to /api/chat with body:", {
+                messages: [userMessage],
+            });
+
+            // GPT 스트리밍 요청
+            const response = await fetch("/api/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ messages: [userMessage] }),
+            });
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder("utf-8");
+            let accumulatedText = ""; // 누적된 텍스트를 저장할 변수
+            const tempId = Date.now(); // DB에 저장하기 전 임시 ID 발급으로 GPT 답변 청크를 실시간으로 업데이트 가능하게 한다.
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                // 데이터를 디코딩
+                const chunk = decoder.decode(value);
+
+                // SSE 형식에서 `data:` 접두사를 제거
+                const lines = chunk.split("\n");
+                for (const line of lines) {
+                    if (line.startsWith("data:")) {
+                        const jsonString = line.replace(/^data:\s*/, ""); // `data:` 제거
+                        if (jsonString.trim() === "[DONE]") {
+                            console.log("Stream finished");
+                            break;
+                        }
+                        try {
+                            const parsedData = JSON.parse(jsonString); // JSON 파싱
+                            const content = parsedData.content || ""; // content만 추출
+
+                            // 누적 텍스트 업데이트
+                            accumulatedText += content;
+
+                            // 스트리밍 데이터를 실시간 반영
+                            onStreamUpdate(content, parsedData.isFinal,false, tempId);
+
+                        } catch (err) {
+                            console.error("Error parsing JSON:", err);
+                        }
+                    }
+                }
+            }
+
+            // 최종 응답을 부모 함수에 전달
+            onSend(accumulatedText);
         } catch (error) {
-            console.error("Message send failed:", error);
+            console.error("Error fetching GPT response:", error);
         } finally {
-            setIsProcessing(false); // 전송 상태 초기화
+            setIsProcessing(false);
+            setMessage(""); // 입력창 초기화
+            if (textareaRef.current) {
+                textareaRef.current.style.height = "auto"; // 높이 초기화
+            }
         }
     };
+
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            if (!isProcessing && message.trim()) {
-                handleSend();
-            }
+            handleSend();
         }
     };
 
@@ -102,5 +152,4 @@ const ChatInput = ({ onSend = () => Promise.resolve() }) => {
         </div>
     );
 };
-
 export default ChatInput;

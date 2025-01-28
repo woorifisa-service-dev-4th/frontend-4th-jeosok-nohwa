@@ -13,6 +13,7 @@ const ChatPage = () => {
     const dateParam = searchParams.get("date");
     const date = dateParam ? dateParam.replace(/-/g, ".") : "...";
 
+
     const fetchMessages = async () => {
         if (!dateParam) {
             console.error("Invalid date parameter");
@@ -67,8 +68,13 @@ const ChatPage = () => {
         };
     }, []);
 
+    // 메시지가 업데이트될 때 로그 출력
+    useEffect(() => {
+        console.log("Messages updated:", messages);
+    }, [messages]);
+
     // 메시지 전송 핸들러
-    const handleSend = async (message) => {
+    const handleSend = async (message, isUser = false) => {
         if (!message.trim()) return;
 
         const now = new Date();
@@ -84,20 +90,22 @@ const ChatPage = () => {
 
 
         const [year, month, day] = date.split("."); // 날짜 파싱
-        console.log(year)
+
         const chatTime = `${year}-${month}-${day}T${timePart}+09:00`; // 날짜와 시간 합성
 
         const newMessage = {
             text: message.trim(),
-            is_user: true,
+            is_user: isUser,
             owner_id: currentUserId,
             chat_time: chatTime, // 날짜와 시간 합성한 값
             created_at: isoString, // 한국 시간 그대로 저장
         };
         console.log(newMessage);
 
+        if(isUser){
+            setMessages((prevMessages) => [...prevMessages, newMessage]);
+        }
 
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
 
         const { error } = await supabase.from("messages").insert([newMessage]);
 
@@ -108,13 +116,60 @@ const ChatPage = () => {
         }
     };
 
+    const getKSTChatTime = (date) => {
+        const offset = 9 * 60 * 60 * 1000;
+        const kstDate = new Date(new Date().getTime() + offset);
+        const timePart = kstDate.toISOString().split("T")[1].split("+")[0];
+        const [year, month, day] = date.split(".");
+        return `${year}-${month}-${day}T${timePart}+09:00`;
+    };
+
+    const handleStreamUpdate = (chunk, isFinal = false, isUser = false, tempId) => {
+        const chatTime = getKSTChatTime(date);
+
+        setMessages((prevMessages) => {
+            // 청크가 업데이트될 메시지를 찾기
+            const messageIndex = prevMessages.findIndex((msg) => msg.id === tempId);
+
+
+            if (messageIndex !== -1) {
+                // 기존 메시지에 청크를 추가
+                const updatedMessages = [...prevMessages];
+                updatedMessages[messageIndex] = {
+                    ...updatedMessages[messageIndex],
+                    text: updatedMessages[messageIndex].text + chunk, // 청크 추가
+                    isFinal, // 마지막 메시지인지 업데이트
+                };
+                return updatedMessages;
+            }
+
+            // 기존 메시지가 없으면 새 메시지 추가
+            return [
+                ...prevMessages,
+                {
+                    id: tempId,
+                    text: chunk,
+                    owner_id: currentUserId,
+                    is_user: isUser,
+                    chat_time: chatTime,
+                    created_at: new Date().toISOString(),
+                    isFinal, // 마지막 메시지 여부
+                },
+            ];
+        });
+    };
+
+
+
+    console.log("After update:", messages);
+
     return (
         <div className="flex flex-col h-screen bg-white">
             <ChatHeader date={date} />
             <div className="flex-1 overflow-y-auto">
-                <MessageList messages={messages} />
+                <MessageList   messages={messages} />
             </div>
-            <ChatInput onSend={handleSend} />
+            <ChatInput onSend={handleSend} onStreamUpdate={handleStreamUpdate} />
         </div>
     );
 };
