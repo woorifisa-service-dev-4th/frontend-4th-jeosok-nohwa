@@ -81,9 +81,10 @@ const ChatPage = () => {
         const isoString = kstDate.toISOString().replace("Z", "+09:00"); // 한국 시간 ISO 8601
         const timePart = isoString.split("T")[1].split("+")[0]; // "HH:mm:ss" 추출
 
-        // 주어진 날짜와 시간 합성 (날짜는 "2021.01.01" 형식으로 주어진다고 가정)
-        const dateParam = "2021.01.01"; // 예: "2021.01.01"
-        const [year, month, day] = dateParam.split("."); // 날짜 파싱
+
+
+        const [year, month, day] = date.split("."); // 날짜 파싱
+        console.log(year)
         const chatTime = `${year}-${month}-${day}T${timePart}+09:00`; // 날짜와 시간 합성
 
         const newMessage = {
