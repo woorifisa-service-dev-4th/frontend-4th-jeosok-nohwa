@@ -72,20 +72,29 @@ const ChatPage = () => {
         if (!message.trim()) return;
 
         const now = new Date();
-        const hours = String(now.getHours()).padStart(2, "0");
-        const minutes = String(now.getMinutes()).padStart(2, "0");
-        const seconds = String(now.getSeconds()).padStart(2, "0");
 
-        const chatTimeString = `${dateParam} ${hours}:${minutes}:${seconds}`;
-        const chatTime = new Date(chatTimeString).toISOString();
+        // 한국 시간(KST)으로 변환
+        const offset = 9 * 60 * 60 * 1000; // UTC+9 시간(밀리초)
+        const kstDate = new Date(now.getTime() + offset);
+
+        // ISO 8601 형식에서 시간 부분 추출
+        const isoString = kstDate.toISOString().replace("Z", "+09:00"); // 한국 시간 ISO 8601
+        const timePart = isoString.split("T")[1].split("+")[0]; // "HH:mm:ss" 추출
+
+        // 주어진 날짜와 시간 합성 (날짜는 "2021.01.01" 형식으로 주어진다고 가정)
+        const dateParam = "2021.01.01"; // 예: "2021.01.01"
+        const [year, month, day] = dateParam.split("."); // 날짜 파싱
+        const chatTime = `${year}-${month}-${day}T${timePart}+09:00`; // 날짜와 시간 합성
 
         const newMessage = {
             text: message.trim(),
             is_user: true,
             owner_id: currentUserId,
-            chat_time: chatTime,
-            created_at: new Date().toISOString(),
+            chat_time: chatTime, // 날짜와 시간 합성한 값
+            created_at: isoString, // 한국 시간 그대로 저장
         };
+        console.log(newMessage);
+
 
         setMessages((prevMessages) => [...prevMessages, newMessage]);
 
