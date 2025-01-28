@@ -7,16 +7,14 @@ const ChatInput = ({ onSend = () => Promise.resolve() }) => {
     const textareaRef = useRef(null);
 
     const handleInputChange = (e) => {
-        setMessage(e.target.value);
+        const inputValue = e.target.value;
+        setMessage(inputValue); // 상태 업데이트
         if (textareaRef.current) {
             const { scrollHeight, style } = textareaRef.current;
-            if (style.height !== `${scrollHeight}px`) {
-                style.height = "auto";
-                style.height = `${scrollHeight}px`;
-            }
+            style.height = "auto"; // 초기화 후
+            style.height = `${scrollHeight}px`; // 새로운 높이 설정
         }
     };
-
 
     const handleSend = async () => {
         if (!message.trim() || isProcessing) {
@@ -29,14 +27,14 @@ const ChatInput = ({ onSend = () => Promise.resolve() }) => {
 
         const currentMessage = message.trim();
 
-        // 입력창과 높이 즉시 초기화
-        setMessage(""); // 입력창 내용 초기화
-        if (textareaRef.current) {
-            textareaRef.current.style.height = "auto"; // 높이 초기화
-        }
-
         try {
             await onSend(currentMessage); // 메시지 전송 (비동기)
+
+            // 메시지 전송 성공 시 입력창 초기화
+            setMessage(""); // React 상태 초기화
+            if (textareaRef.current) {
+                textareaRef.current.style.height = "auto"; // 높이 초기화
+            }
         } catch (error) {
             console.error("Message send failed:", error);
         } finally {
@@ -59,9 +57,9 @@ const ChatInput = ({ onSend = () => Promise.resolve() }) => {
                 ref={textareaRef}
                 className="flex-1 bg-transparent border-none px-3 py-2 focus:outline-none focus:ring-0 resize-none overflow-hidden text-gray-600 placeholder-gray-400"
                 placeholder="오늘도 저속노화 하셨나요?"
-                value={message}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyDown}
+                value={message} // React 상태와 연결
+                onChange={handleInputChange} // 입력 이벤트 핸들링
+                onKeyDown={handleKeyDown} // Enter 키 처리
                 rows={1}
                 style={{ height: "auto" }}
             />
