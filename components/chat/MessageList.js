@@ -1,4 +1,7 @@
 import { useEffect, useRef } from 'react';
+import React from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import ProfileImage from "@/components/chat/ProfileImage";
 import "@/components/chat/CustomScrollBar.css";
 
@@ -18,9 +21,9 @@ const MessageList = ({ messages }) => {
     return (
         <div className="mt-16 mb-20 px-4 space-y-4 custom-scrollbar">
             {messages.map((msg, index) => {
-                const msgDate = new Date(msg.created_at); // `created_at`을 Date 객체로 변환
+                const msgDate = new Date(msg.chat_time);
                 const previousDate =
-                    index > 0 ? new Date(messages[index - 1]?.created_at) : null;
+                    index > 0 ? new Date(messages[index - 1]?.chat_time) : null;
 
                 // 6시간 이상의 시간 간격 여부 확인
                 const isTimeGap =
@@ -48,7 +51,7 @@ const MessageList = ({ messages }) => {
 
                         {/* 메시지 표시 */}
                         <div
-                            className={`flex items-center ${
+                            className={`flex items-end ${
                                 msg.is_user ? "justify-end" : "justify-start"
                             }`}
                         >
@@ -68,7 +71,18 @@ const MessageList = ({ messages }) => {
                                     wordBreak: "break-word", // 단어를 강제로 줄 바꿈
                                 }}
                             >
-                                <p className="text-sm text-mainGray">{msg.text}</p>
+                                {msg.is_user ? (
+                                    // 단순 텍스트 렌더링
+                                    <p className="text-sm text-mainGray">{msg.text}</p>
+                                ) : (
+                                    // 마크다운 렌더링
+                                    <ReactMarkdown
+                                        className="text-sm text-mainGray"
+                                        remarkPlugins={[remarkGfm]} // GitHub 스타일 마크다운 지원
+                                    >
+                                        {msg.text}
+                                    </ReactMarkdown>
+                                )}
                             </div>
                         </div>
                     </div>
