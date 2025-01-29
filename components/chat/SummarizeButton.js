@@ -37,8 +37,20 @@ const SummarizeButton = ({ ownerId, chatDate, setMessages, messages, onSend }) =
                 summaryText = data.summary;
             }
 
-            onSend(summaryText.trim(), false); // ✅ 메시지 추가
+            //onSend(summaryText.trim(), false); // ✅ 메시지 추가
 
+            // ✅ UI에 즉시 반영
+            const summaryMessage = {
+                id: Date.now(),
+                text: summaryText,
+                is_user: false,
+                owner_id: ownerId,
+                chat_time: new Date().toISOString(),
+                created_at: new Date().toISOString(),
+                isSummary: true,
+            };
+
+            setMessages((prevMessages) => [...prevMessages, summaryMessage]);
             setLastSummaryIndex(messages.length);
             setIsCompleted(true);
         } catch (error) {
@@ -57,7 +69,7 @@ const SummarizeButton = ({ ownerId, chatDate, setMessages, messages, onSend }) =
             }`}
             disabled={isLoading || isCompleted}
         >
-            {isLoading ? "⏳ 요약 중..." : isCompleted ? "✔️ 요약 확인하기" : "✨ 저속노화 기록 ✨"}
+            {isLoading ? "⏳ 요약 중..." : isCompleted ? "✔️ 요약 완료" : "✨ 저속노화 기록 ✨"}
         </button>
     );
 };
