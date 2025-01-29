@@ -1,10 +1,9 @@
-import NavBar from "../components/nav-bar";
+import NavBar from "../../components/common/NavBar";
 
 export default function Page() {
   return (
-    <div>
-      프로필page
-      <NavBar />
-    </div>
+      <div className="min-h-screen flex flex-col items-center justify-between w-full">
+          <NavBar className="w-full"/>
+      </div>
   );
 }

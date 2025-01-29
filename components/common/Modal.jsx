@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image"; // Next.js Image 컴포넌트 추가
-import "./modal.css"; // 추가 스타일 가져오기
+import "./styles/modal.css"; // 추가 스타일 가져오기
 
 const Modal = ({ isOpen, onClose, children, date }) => {
   if (!isOpen) return null;

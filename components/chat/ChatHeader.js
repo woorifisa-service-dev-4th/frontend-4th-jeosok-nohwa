@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link';
 import React, { useState } from "react";
-import CalendarModal from "@/app/components/CalendarModal";
+import CalendarModal from "@/components/calendar/CalendarModal";
 import { useRouter } from 'next/navigation';
 
 const ChatHeader = ({ date }) => {
