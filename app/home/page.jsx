@@ -43,7 +43,8 @@ export default function CalandarPage() {
                             minute: "2-digit",
                         })
                         : "00:00",
-                    title: event.summary,
+                    title: event.title,
+                    summary: event.summary,
                     imageSrc: getRandomImage(),
                 }))
             );
