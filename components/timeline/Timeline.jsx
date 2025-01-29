@@ -24,8 +24,9 @@ const Timeline = ({ events, loading }) => {
   // 로딩 상태일 때 스켈레톤 표시
   if (loading) return <TimelineSkeleton />;
 
-  if (!events || events.length === 0) {
+ /* if (!events || events.length === 0) {
     return (
+
         <div className="flex flex-col items-center justify-center h-full">
           <img
               src="/image/giphy.gif"
@@ -35,7 +36,7 @@ const Timeline = ({ events, loading }) => {
           <p className="text-gray-500 text-lg font-medium">채팅을 시작해보세요</p>
         </div>
     );
-  }
+  }*/
 
   return (
       <div className="timeline-wrapper">
