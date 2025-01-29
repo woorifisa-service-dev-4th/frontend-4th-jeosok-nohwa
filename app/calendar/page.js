@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import MyCalendar from '../components/MyCalendar';
-import NavBar from "../components/nav-bar";
-import Timeline from '../components/timeline/Timeline';
+import MyCalendar from '../../components/calendar/MyCalendar';
+import NavBar from "../../components/common/NavBar";
+import Timeline from '../../components/timeline/Timeline';
 
 export default function Page() {
   // 오늘 날짜를 초기값으로 설정

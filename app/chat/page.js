@@ -1,21 +1,34 @@
-'use client'
+'use client';
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import ChatInput from "@/components/chat/ChatInput";
 import ChatHeader from "@/components/chat/ChatHeader";
 import MessageList from "@/components/chat/MessageList";
+import { useSearchParams } from "next/navigation";
 
 const ChatPage = () => {
     const [messages, setMessages] = useState([]);
-    const currentUserId = 1; // 하드코딩된 사용자 ID 예시
+    const currentUserId = 1;
+    const searchParams = useSearchParams();
+    const dateParam = searchParams.get("date");
+    const date = dateParam ? dateParam.replace(/-/g, ".") : "...";
 
-    // 메시지 로드 함수
+
     const fetchMessages = async () => {
+        if (!dateParam) {
+            console.error("Invalid date parameter");
+            return;
+        }
+
+        const formattedDate = dateParam;
+
         const { data, error } = await supabase
             .from("messages")
             .select("*")
             .eq("owner_id", currentUserId)
-            .order("created_at", { ascending: true });
+            .filter("chat_time", "gte", `${formattedDate} 00:00:00`)
+            .filter("chat_time", "lt", `${formattedDate} 23:59:59`)
+            .order("chat_time", { ascending: true });
 
         if (error) {
             console.error("Error fetching messages:", error);
@@ -24,10 +37,13 @@ const ChatPage = () => {
         }
     };
 
-    // Realtime 구독
     useEffect(() => {
-        fetchMessages();
+        if (dateParam) {
+            fetchMessages();
+        }
+    }, [dateParam]);
 
+    useEffect(() => {
         const subscription = supabase
             .channel("realtime:public:messages")
             .on(
@@ -50,21 +66,34 @@ const ChatPage = () => {
         };
     }, []);
 
-    // 메시지 전송 핸들러
-    const handleSend = async (message) => {
+    useEffect(() => {
+        console.log("Messages updated:", messages);
+    }, [messages]);
+
+    const handleSend = async (message, isUser = false) => {
         if (!message.trim()) return;
+
+        const now = new Date();
+        const offset = 9 * 60 * 60 * 1000;
+        const kstDate = new Date(now.getTime() + offset);
+
+        const isoString = kstDate.toISOString().replace("Z", "+09:00");
+        const timePart = isoString.split("T")[1].split("+")[0];
+
+        const [year, month, day] = date.split(".");
+
+        const chatTime = `${year}-${month}-${day}T${timePart}+09:00`;
 
         const newMessage = {
             text: message.trim(),
-            is_user: true,
+            is_user: isUser,
             owner_id: currentUserId,
-            created_at: new Date().toISOString(), // 로컬에서 생성 시간 설정
+            chat_time: chatTime,
+            created_at: isoString,
         };
 
-        // 로컬 상태 업데이트
         setMessages((prevMessages) => [...prevMessages, newMessage]);
 
-        // DB에 메시지 저장
         const { error } = await supabase.from("messages").insert([newMessage]);
 
         if (error) {
@@ -76,11 +105,21 @@ const ChatPage = () => {
 
     return (
         <div className="flex flex-col h-screen bg-white">
-            <ChatHeader />
+            <ChatHeader date={date} />
             <div className="flex-1 overflow-y-auto">
-                <MessageList messages={messages} />
+                <MessageList
+                    messages={messages}
+                    setMessages={setMessages}
+                    currentUserId={currentUserId}
+                    date={dateParam}
+                    onSend={handleSend}
+                />
             </div>
-            <ChatInput onSend={handleSend} />
+            <ChatInput
+                onSend={handleSend}
+                currentUserId={currentUserId}
+                date={dateParam}
+            />
         </div>
     );
 };
