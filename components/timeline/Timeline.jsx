@@ -48,14 +48,16 @@ const Timeline = ({ events, loading }) => {
         ))}
 
         {isModalOpen && (
-            <Modal
-                isOpen={isModalOpen}
-                onClose={handleCloseModal}
-                date={selectedEvent?.date}
-            >
-              <h2 className="modal-title">{selectedEvent?.title}</h2>
-              <p>{`Time: ${selectedEvent?.time}`}</p>
-            </Modal>
+         <Modal
+         isOpen={isModalOpen}
+         onClose={handleCloseModal}
+         date={selectedEvent?.date}
+       >
+         {typeof selectedEvent?.summary === 'string'
+           ? selectedEvent.summary
+           : JSON.stringify(selectedEvent?.summary)}
+       </Modal>
+       
         )}
       </div>
   );

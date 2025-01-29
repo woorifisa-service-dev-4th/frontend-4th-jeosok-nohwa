@@ -1,6 +1,10 @@
+'use client';
+
 import React from "react";
 import Image from "next/image"; // Next.js Image 컴포넌트 추가
 import "./styles/modal.css"; // 추가 스타일 가져오기
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const Modal = ({ isOpen, onClose, children, date }) => {
   if (!isOpen) return null;
@@ -31,7 +35,14 @@ const Modal = ({ isOpen, onClose, children, date }) => {
         </div>
 
         {/* 콘텐츠 */}
-        <div className="modal-content">{children}</div>
+        <div className="modal-content">
+          <ReactMarkdown
+            className="text-sm text-mainGray"
+            remarkPlugins={[remarkGfm]}
+          >
+            {typeof children === 'string' ? children : JSON.stringify(children)}
+          </ReactMarkdown>
+        </div>
       </div>
     </div>
   );
