@@ -1,10 +1,11 @@
 "use client";
 import { useState, useRef } from "react";
 
-const ChatInput = ({ onSend = () => Promise.resolve(), onStreamUpdate }) => {
+const ChatInput = ({ onSend = () => Promise.resolve(), onStreamUpdate, currentUserId, date }) => {
     const [message, setMessage] = useState("");
     const [isProcessing, setIsProcessing] = useState(false);
     const textareaRef = useRef(null);
+
 
     const handleInputChange = (e) => {
         const inputValue = e.target.value;
@@ -20,7 +21,7 @@ const ChatInput = ({ onSend = () => Promise.resolve(), onStreamUpdate }) => {
         if (!message.trim() || isProcessing) return;
 
         setIsProcessing(true);
-        const userMessage = { content: message.trim(), is_user: true, role: "user" };
+        const userMessage = { content: message.trim(), is_user: true, role: "user", owner_id : currentUserId, chat_date : date };
 
         try {
             // 사용자 메시지를 즉시 반영
@@ -46,7 +47,7 @@ const ChatInput = ({ onSend = () => Promise.resolve(), onStreamUpdate }) => {
             const decoder = new TextDecoder("utf-8");
             let accumulatedText = ""; // 누적된 텍스트를 저장할 변수
             const tempId = Date.now(); // DB에 저장하기 전 임시 ID 발급으로 GPT 답변 청크를 실시간으로 업데이트 가능하게 한다.
-
+            onStreamUpdate("", false,false, tempId);
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;

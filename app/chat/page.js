@@ -169,7 +169,12 @@ const ChatPage = () => {
             <div className="flex-1 overflow-y-auto">
                 <MessageList   messages={messages} />
             </div>
-            <ChatInput onSend={handleSend} onStreamUpdate={handleStreamUpdate} />
+            <ChatInput
+                onSend={handleSend}
+                onStreamUpdate={handleStreamUpdate}
+                currentUserId={currentUserId}
+                date={dateParam}
+            />
         </div>
     );
 };
