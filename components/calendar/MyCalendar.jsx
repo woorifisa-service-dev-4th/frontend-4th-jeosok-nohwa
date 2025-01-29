@@ -3,7 +3,7 @@
 import React, { useState,useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'; 
-import '../styles/custom-calendar.css';
+import '@/components/calendar/styles/custom-calendar.css';
 import { supabase } from "@/lib/supabaseClient";
 
 function MyCalendar({ onClickDay = () => {}, ...props }) {

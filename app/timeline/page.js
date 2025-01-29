@@ -1,7 +1,7 @@
 import React from 'react';
 import NavBar from "@/components/common/NavBar";
 
-function Page(props) {
+function Page() {
     return (
         <div className="min-h-screen flex flex-col items-center justify-between w-full">
             <NavBar className="w-full"/>

@@ -2,9 +2,9 @@ import React from "react";
 import dynamic from "next/dynamic";
 import "react-calendar/dist/Calendar.css";
 import { useRouter } from 'next/navigation';
-import '../styles/custom-calendar.css';
-import "../components/ui/modal/modal.css"; 
-import '../styles/custom-calendar-modal.css';
+import '@/components/calendar/styles/custom-calendar.css';
+import "@/components/common/styles/modal.css";
+import '@/components/calendar/styles/custom-calendar-modal.css';
 import MyCalendar from "./MyCalendar";
 
 // React-Calendar를 동적으로 로드 (SSR 방지)

@@ -3,7 +3,7 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import ProfileImage from "@/components/chat/ProfileImage";
-import "@/components/chat/CustomScrollBar.css";
+import "@/components/chat/styles/CustomScrollBar.css";
 
 const MessageList = ({ messages }) => {
     const endOfMessagesRef = useRef(null);
