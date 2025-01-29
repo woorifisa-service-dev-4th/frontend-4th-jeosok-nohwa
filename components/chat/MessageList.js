@@ -1,40 +1,63 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from "react";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import ProfileImage from "@/components/chat/ProfileImage";
+import SummarizeButton from "@/components/chat/SummarizeButton";
 import "@/components/chat/styles/CustomScrollBar.css";
 
-const MessageList = ({ messages }) => {
+const MessageList = ({ messages, setMessages, currentUserId, date, onSend }) => {
     const endOfMessagesRef = useRef(null);
-    console.log("Messages:", messages); // 디버깅용 로그
+    const [showSummarizeButton, setShowSummarizeButton] = useState(false);
+    const [isGptResponding, setIsGptResponding] = useState(false);
+    const [lastSummaryIndex, setLastSummaryIndex] = useState(null);
 
     useEffect(() => {
-        endOfMessagesRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]); // 메시지 목록이 변경될 때마다 실행
+        endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
+
+        if (messages.length >= 4) {
+            const lastMessage = messages[messages.length - 1];
+
+            if (!lastMessage.is_user && lastMessage.isFinal && lastSummaryIndex === null) {
+                setShowSummarizeButton(true);
+                setIsGptResponding(false);
+            } else if (lastSummaryIndex !== null && messages.length >= lastSummaryIndex + 4) {
+                setShowSummarizeButton(true);
+                setIsGptResponding(false);
+            } else if (!lastMessage.is_user) {
+                setIsGptResponding(true);
+                setShowSummarizeButton(false);
+            } else {
+                setShowSummarizeButton(false);
+            }
+        } else {
+            setShowSummarizeButton(false);
+        }
+    }, [messages]);
 
     if (!messages || !Array.isArray(messages)) {
         console.error("Invalid messages:", messages);
         return null;
     }
 
+    const summaryPrompt = showSummarizeButton && !isGptResponding
+        ? { id: "summary_prompt", text: "저속노화 기록을 원하시면 아래 버튼을 눌러주세요.", is_user: false, isSummaryButton: true }
+        : null;
+
+    const displayMessages = summaryPrompt ? [...messages, summaryPrompt] : messages;
+
     return (
-        <div className="mt-16 mb-20 px-4 space-y-4 custom-scrollbar">
-            {messages.map((msg, index) => {
-                const msgDate = new Date(msg.chat_time);
+        <div className="mt-16 mb-20 px-4 space-y-4 custom-scrollbar relative">
+            {displayMessages.map((msg, index) => {
+                const msgDate = new Date(msg.chat_time || new Date());
                 const previousDate =
-                    index > 0 ? new Date(messages[index - 1]?.chat_time) : null;
+                    index > 0 ? new Date(displayMessages[index - 1]?.chat_time || new Date()) : null;
 
-                // 6시간 이상의 시간 간격 여부 확인
                 const isTimeGap =
-                    index === 0 || // 첫 메시지인 경우
-                    (previousDate && msgDate - previousDate >= 6 * 60 * 60 * 1000); // 6시간 이상 간격
-
-
+                    index === 0 || (previousDate && msgDate - previousDate >= 6 * 60 * 60 * 1000);
 
                 return (
-                    <div key={index}>
-                        {/* 시간 표시 또는 6시간 기준 구분선 */}
+                    <div key={msg.id || index}>
                         {isTimeGap && (
                             <div className="flex items-center justify-center my-2">
                                 <div className="border-t border-gray-300 w-full mx-4"></div>
@@ -42,19 +65,14 @@ const MessageList = ({ messages }) => {
                                     {msgDate.toLocaleTimeString([], {
                                         hour: "2-digit",
                                         minute: "2-digit",
-                                        hour12: false, // 24시간 형식 사용
+                                        hour12: false,
                                     })}
                                 </span>
                                 <div className="border-t border-gray-300 w-full mx-4"></div>
                             </div>
                         )}
 
-                        {/* 메시지 표시 */}
-                        <div
-                            className={`flex items-end ${
-                                msg.is_user ? "justify-end" : "justify-start"
-                            }`}
-                        >
+                        <div className={`flex items-end ${msg.is_user ? "justify-end" : "justify-start"}`}>
                             {!msg.is_user && (
                                 <ProfileImage
                                     className="px-18"
@@ -62,23 +80,32 @@ const MessageList = ({ messages }) => {
                                     alt="Profile"
                                 />
                             )}
-                            <div
-                                className={`px-4 py-2 rounded-lg ${
-                                    msg.is_user ? "bg-gray-100 ml-0.5" : "bg-mainGreen"
-                                } break-words`}
-                                style={{
-                                    maxWidth: "75%", // 화면의 70% 너비 제한
-                                    wordBreak: "break-word", // 단어를 강제로 줄 바꿈
-                                }}
-                            >
-                                {msg.is_user ? (
-                                    // 단순 텍스트 렌더링
-                                    <p className="text-sm text-mainGray">{msg.text}</p>
-                                ) : (
-                                    // 마크다운 렌더링
+                            <div className={`px-4 py-2 rounded-lg ${msg.is_user ? "bg-gray-100 ml-0.5" : "bg-mainGreen"} break-words`}
+                                 style={{ maxWidth: "75%", wordBreak: "break-word" }}>
+                                {msg.isSummaryButton ? (
+                                    <div className="flex flex-col items-center space-y-2 w-full">
+                                        <p className="text-sm text-mainGray text-center">{msg.text}</p>
+                                        <SummarizeButton
+                                            ownerId={currentUserId}
+                                            chatDate={date}
+                                            setMessages={setMessages}
+                                            messages={messages}
+                                            onSend={onSend}
+                                        />
+                                    </div>
+                                ) : msg.isSummary ? (
                                     <ReactMarkdown
                                         className="text-sm text-mainGray"
-                                        remarkPlugins={[remarkGfm]} // GitHub 스타일 마크다운 지원
+                                        remarkPlugins={[remarkGfm]}
+                                    >
+                                        {msg.text}
+                                    </ReactMarkdown>
+                                ) : msg.is_user ? (
+                                    <p className="text-sm text-mainGray">{msg.text}</p>
+                                ) : (
+                                    <ReactMarkdown
+                                        className="text-sm text-mainGray"
+                                        remarkPlugins={[remarkGfm]}
                                     >
                                         {msg.text}
                                     </ReactMarkdown>
@@ -88,7 +115,7 @@ const MessageList = ({ messages }) => {
                     </div>
                 );
             })}
-            {/* 스크롤을 맨 아래로 이동시키는 데 사용되는 빈 div */}
+
             <div ref={endOfMessagesRef} />
         </div>
     );

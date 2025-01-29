@@ -107,7 +107,7 @@ const ChatInput = ({ onSend = () => Promise.resolve(), onStreamUpdate, currentUs
             <textarea
                 ref={textareaRef}
                 className="flex-1 bg-transparent border-none px-3 py-2 focus:outline-none focus:ring-0 resize-none overflow-hidden text-gray-600 placeholder-gray-400"
-                placeholder="오늘도 저속노화 하셨나요?"
+                placeholder="오늘 뭐 드셨나요?"
                 value={message} // React 상태와 연결
                 onChange={handleInputChange} // 입력 이벤트 핸들링
                 onKeyDown={handleKeyDown} // Enter 키 처리
