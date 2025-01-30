@@ -17,7 +17,8 @@ function MyCalendar({ onClickDay = () => {}, ...props }) {
 
     // 한국(KST) 시간 기준 오늘 날짜
     const today = new Date();
-    const formattedToday = today.toISOString().split('T')[0]; // YYYY-MM-DD 형식 변환
+    today.setHours(today.getHours() + 9); // UTC → KST 변환
+    const formattedDate = today.toISOString().split('T')[0]; // YYYY-MM-DD
 
     // Supabase에서 마킹할 날짜 가져오기 (한국 시간 그대로 사용)
     useEffect(() => {
@@ -73,21 +74,23 @@ function MyCalendar({ onClickDay = () => {}, ...props }) {
                     return null;
                 }}
                 tileClassName={({ date }) => {
-                    // ✅ React-Calendar의 date를 KST 기준 날짜 문자열로 변환
+                    const today = new Date();
+                    today.setHours(today.getHours() + 9); // UTC → KST 변환
+                    const formattedToday = today.toISOString().split('T')[0]; // YYYY-MM-DD
+
                     const formattedDate = date.toLocaleDateString("ko-KR", {
                         year: "numeric",
                         month: "2-digit",
                         day: "2-digit",
-                    }).replace(/\. /g, "-").replace(/\./g, ""); // YYYY-MM-DD 형식으로 변환
+                    }).replace(/\. /g, "-").replace(/\./g, "");
 
                     if (formattedDate === formattedToday) {
-                        console.log("✅ 오늘 날짜 적용됨:", formattedDate);
-                        return 'today-highlight';
+                        return 'today-highlight'; // ✅ 오늘 날짜 클래스 적용
                     }
                     if (date.getDay() === 0) {
-                        return 'sunday';
+                        return 'sunday'; // ✅ 일요일 클래스 적용
                     }
-                    return '';
+                    return ''; // 기본값
                 }}
             />
         </div>

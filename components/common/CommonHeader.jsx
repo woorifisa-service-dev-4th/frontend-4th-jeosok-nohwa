@@ -55,15 +55,15 @@ export default function CommonHeader() {
 
 
                     {/* 채팅 아이콘 */}
-                    <div className="flex flex-col items-center justify-center ">
+                    <div className="flex flex-col items-center justify-center group">
                         {pathname === "/chat" || active === "/chat" ? (
-                            <ChatBubbleOvalLeftIcon className="w-9 h-9 fill-[#D9F7F3] stroke-[#b1f1e8] stroke-[0.5] translate-y-[-1px]" />
+                            <ChatBubbleOvalLeftIcon
+                                className="w-9 h-9 fill-[#D9F7F3] stroke-[#b1f1e8] stroke-[0.5] translate-y-[-1px]"/>
                         ) : (
                             <ChatBubbleOvalLeftIcon
-                                className="w-9 h-9  stroke-gray-950 hover:stroke-gray-900 stroke-[0.5] translate-y-[-1px]"
+                                className="w-9 h-9 stroke-gray-950 hover:stroke-[#b1f1e8] hover:fill-[#D9F7F3] stroke-[0.5] translate-y-[-1px] group-hover:fill-[#D9F7F3] group-hover:stroke-[#b1f1e8]"
                                 onClick={handleDateClick}
                             />
-
                         )}
                     </div>
                 </div>

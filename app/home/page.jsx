@@ -71,19 +71,31 @@ export default function CalandarPage() {
             {/* ✅ CommonHeader 높이를 고려하여 min-h-[calc(100vh-HeaderHeight)] 적용 */}
             <div className="flex flex-col items-center w-full min-h-[calc(100vh-64px)]">
                 {loading ? (
-                    <div className="flex justify-center items-center w-full min-h-[calc(100vh-64px)]">
-                        <SkeletonLoader />
+                    <div className="flex flex-col w-full items-center">
+                        <SkeletonLoader className="w-full max-w-md mt-4" />
                     </div>
                 ) : (
-                    <div className="w-full max-w-md mt-4">
-                        <MyCalendar onClickDay={handleDateClick} />
-                        <Timeline events={filteredEvents} />
+                    <div className="w-full flex flex-col items-center">
+                        <div className="w-full max-w-md mt-2">
+                            <MyCalendar onClickDay={handleDateClick}/>
+
+                            {/* ✅ 달력과 타임라인 사이 간격 추가 */}
+                            <div className="mt-4"></div>
+
+                            {/* ✅ Timeline도 동일한 max-w-md 적용 */}
+                            <div className="w-full flex justify-center">
+                                <Timeline events={filteredEvents} className="w-full max-w-md"/>
+                            </div>
+                        </div>
                     </div>
+
+
                 )}
+
             </div>
 
             {/* ✅ NavBar가 페이지 하단에 고정되도록 설정 */}
-            <NavBar className="w-full fixed bottom-0" />
+            <NavBar className="w-full fixed bottom-0"/>
         </div>
     );
 }
