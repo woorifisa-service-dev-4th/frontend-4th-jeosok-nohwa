@@ -42,49 +42,89 @@ export async function POST(request) {
             );
         }
 
-        // ✅ ChatGPT 요약 요청
+        // ✅ GPT API 요청을 위한 메시지 변환
         const historyMessages = messages.map(msg => ({
             role: msg.is_user ? "user" : "assistant",
             content: msg.text,
         }));
 
-        const completion = await openai.chat.completions.create({
-            model: "gpt-4",
-            messages: [
-                {
-                    role: "system",
-                    content:
-                        "유저는 이 대화를 마무리하려고 해.\n" +
-                        "오늘 내용에 대한 요약 기록을 작성해줘.\n" +
-                        "다음의 조건을 반드시 반영해야 해:\n" +
-                        "공유의 재미 요소: 간단한 이모지를 활용하여 내용을 생동감 있고 흥미롭게 꾸며줘.\n" +
-                        "뛰어난 정확성: 앞선 대화를 참고해서 매우 정확한 요약 정보만을 줘. 정확한 정보가 아니라면 해당 부분을 제외하고 보내줘. 할루시네이션은 절대 안돼.\n" +
-                        "- 유저의 식단이나 운동 \n" +
-                        "- 마지막에 핵심을 관통하는 저속노화 전문가의 한마디\n" +
-                        "등\n" +
-                        "추가 지침:\n" +
-                        "SNS 공유 최적화: 시각적으로 매력적인 요소(예: 간단한 이모지)를 포함하고, 공유하기 쉬운 구조로 작성해줘.\n" +
-                        "단편 소설 같은 문체: 이야기의 흐름이 자연스럽고 감성적으로 이어지도록 해줘.\n" +
-                        "적절한 이모지 활용: 내용의 분위기를 해치지 않으면서도 감정을 표현할 수 있는 이모지를 적절히 배치해줘.",
-                },
-                ...historyMessages,
-            ],
-            temperature: 0.7,
-        });
+        // ✅ 한 줄 요약 요청
+        let title = "";
+        try {
+            const shortSummaryCompletion = await openai.chat.completions.create({
+                model: "gpt-4-turbo",
+                messages: [
+                    {
+                        role: "system",
+                        content:
+                            "유저의 주요 활동과 건강 습관을 1줄로 요약해주세요. 명사형으로 끝내지마.  \n" +
+                            "명확하게 핵심만 담아야 합니다.\n" +
+                            "예: 오늘은 건강한 샐러드와 산책을 했어요!" +
+                            "- 예: 유산소 운동은 했지만 단백질 섭취가 부족했어요.\n"
 
-        const summary = completion.choices[0]?.message?.content?.trim() || "";
+        },
+                    ...historyMessages,
+                ],
+                temperature: 0.7,
+            });
 
-        if (!summary) {
-            return new NextResponse(
-                JSON.stringify({ error: "Failed to generate summary" }),
-                { status: 500, headers: { "Content-Type": "application/json" } }
-            );
+            title = shortSummaryCompletion.choices[0]?.message?.content?.trim() || "";
+        } catch (err) {
+            console.error("❌ 한 줄 요약 생성 실패:", err);
+        }
+
+        // ✅ 전체 요약 요청
+        let summary = "";
+        try {
+            const detailedSummaryCompletion = await openai.chat.completions.create({
+                model: "gpt-4-turbo",
+                messages: [
+                    {
+                        role: "system",
+                        content:
+                            "사용자의 하루 대화를 기반으로 **자세한 요약**을 작성하세요.\n" +
+                            "\n" +
+                            "### **요약 방식**\n" +
+                            "1️⃣ **식단 분석**  \n" +
+                            "   - 사용자가 섭취한 음식을 분석하고  평가하세요.  \n" +
+                            "   - 건강한 음식(채소, 생선, 통곡물 등)과 제한해야 할 음식(정제 탄수화물, 가공식품 등)을 분류하여 요약하세요.  \n" +
+                            "   - 섭취 빈도, 영양 균형, 개선할 점을 명확하게 정리하세요.\n" +
+                            "\n" +
+                            "2️⃣ **운동 분석**  \n" +
+                            "   - 사용자의 운동 습관을 분석하고 **운동 평가 기준**에 따라 점수를 매기세요.  \n" +
+                            "   - 유산소 운동, 근력 운동, 유연성 운동이 각각 얼마나 이루어졌는지 평가하세요.  \n" +
+                            "   - 부족한 점과 개선 방안을 짧고 실용적으로 제안하세요.  \n" +
+                            "\n" +
+                            "3️⃣ **건강 전문가 피드백**  \n" +
+                            "   - 저속노화 전문가로서 사용자가 개선할 수 있는 부분을 핵심적으로 정리하세요.  \n" +
+                            "   - 지나치게 일반적인 조언이 아니라, **사용자의 실제 대화 내용에 기반한 맞춤형 피드백**을 제공하세요.  \n" +
+                            "   - 마지막에는 **격려하는 멘트**를 포함하여 긍정적인 마무리를 하세요.\n" +
+                            "\n" +
+                            "### **출력 형식 (마크다운 적용)**\n" +
+                            "```markdown\n" +
+                            "### 📌 한 줄 요약  \n" +
+                            "\"오늘은 건강한 샐러드와 산책을 했어요!\"  \n" +
+                            "\n" +
+                            "### 📝 전체 요약  \n" +
+                            "- **🥗 식단 분석**: 유저는 샐러드, 연어, 통곡물을 섭취했습니다.  \n" +
+                            "- **🏋️‍♀️ 운동 분석**: 유산소 운동 30분을 했으며, 근력 운동은 부족했습니다.  \n" +
+                            "- **💡 전문가 피드백**: 단백질 섭취를 늘리고 근력 운동을 추가하면 더욱 좋을 것 같아요! 💪\n"
+
+                    },
+                    ...historyMessages,
+                ],
+                temperature: 0.7,
+            });
+
+            summary = detailedSummaryCompletion.choices[0]?.message?.content?.trim() || "";
+        } catch (err) {
+            console.error("❌ 전체 요약 생성 실패:", err);
         }
 
         // ✅ Supabase에 요약 저장
         const { error: insertError } = await supabase
             .from("chat_summaries")
-            .insert([{ owner_id, chat_date, summary, created_at: new Date().toISOString() }]);
+            .upsert([{ owner_id, chat_date, title, summary, created_at: new Date().toISOString() }]);
 
         if (insertError) {
             console.error("Supabase insert error:", insertError);
@@ -94,11 +134,9 @@ export async function POST(request) {
             );
         }
 
-
-
-        // ✅ 클라이언트에 요약 반환
+        // ✅ 클라이언트에 JSON 응답 반환
         return new NextResponse(
-            JSON.stringify({ summary }),
+            JSON.stringify({ title, summary }),
             { status: 200, headers: { "Content-Type": "application/json" } }
         );
     } catch (err) {

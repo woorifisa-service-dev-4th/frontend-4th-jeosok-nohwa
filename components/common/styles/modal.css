@@ -31,3 +31,34 @@
 .modal-content {
   @apply overflow-y-auto;
 }
+
+.modal-content {
+  @apply overflow-y-auto max-h-full px-2; /* 세로 스크롤 활성화 */
+  max-height: calc(100% - 60px); /* 헤더와 패딩을 제외한 영역의 높이 */
+  padding-right: 8px; /* 스크롤바 여백 */
+}
+
+/* 기본적으로 스크롤바 숨김 */
+.modal-content::-webkit-scrollbar {
+  width: 6px; /* 세로 스크롤바 너비 */
+  background: transparent; /* 기본 상태에서 스크롤바 투명 */
+}
+
+/* Hover 상태에서 스크롤바 활성화 */
+.modal-content:hover::-webkit-scrollbar {
+  width: 6px; /* Hover 시 스크롤바 활성화 */
+}
+
+.modal-content:hover::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2); /* 스크롤바 색상 (투명도 포함) */
+  border-radius: 4px; /* 둥근 스크롤바 */
+  transition: background-color 0.2s ease-in-out; /* 부드러운 전환 */
+}
+
+.modal-content:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3); /* 호버 시 조금 더 진한 색상 */
+}
+
+.modal-content:hover::-webkit-scrollbar-track {
+  background: transparent; /* 트랙 투명 처리 */
+}
