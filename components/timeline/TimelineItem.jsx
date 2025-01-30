@@ -9,12 +9,13 @@ const TimelineItem = ({ event, onClick }) => {
   return (
     <div
       className="w-[358px] h-[96px] bg-[#D9F7F3] rounded-2xl p-3 flex flex-col justify-between mb-2 relative"
-      onClick={onClick} 
+      onClick={onClick}
     >
-    
-      <div className="flex items-center justify-between">
+
+      <div className="flex items-center justify-between px-2">
         <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 bg-[#33C9AC] rounded-full"></div>
+          <div className="w-2.5 h-2.5 bg-[#33C9AC] rounded-full self-start translate-y-1.5"></div>
+
           <span className="text-gray-500 text-sm">{time}</span>
         </div>
       </div>
@@ -22,7 +23,7 @@ const TimelineItem = ({ event, onClick }) => {
         {title}
       </div>
 
-   
+
       {imageSrc && (
         <div className="absolute bottom-3 right-3">
           <Image

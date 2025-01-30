@@ -39,7 +39,7 @@ const Timeline = ({ events, loading }) => {
   }*/
 
   return (
-      <div className="timeline-wrapper">
+      <div className="timeline-wrapper flex flex-col items-center w-full">
         {events.map((event, index) => (
             <TimelineItem
                 key={index}
