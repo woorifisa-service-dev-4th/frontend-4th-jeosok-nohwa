@@ -82,7 +82,7 @@ const ChatInput = ({ onSend = () => Promise.resolve(), onStreamUpdate, currentUs
             }
 
             // 최종 응답을 부모 함수에 전달
-            onSend(accumulatedText);
+            onSend(accumulatedText, );
         } catch (error) {
             console.error("Error fetching GPT response:", error);
         } finally {

@@ -24,8 +24,9 @@ const Timeline = ({ events, loading }) => {
   // 로딩 상태일 때 스켈레톤 표시
   if (loading) return <TimelineSkeleton />;
 
-  if (!events || events.length === 0) {
+ /* if (!events || events.length === 0) {
     return (
+
         <div className="flex flex-col items-center justify-center h-full">
           <img
               src="/image/giphy.gif"
@@ -35,10 +36,10 @@ const Timeline = ({ events, loading }) => {
           <p className="text-gray-500 text-lg font-medium">채팅을 시작해보세요</p>
         </div>
     );
-  }
+  }*/
 
   return (
-      <div className="timeline-wrapper">
+      <div className="timeline-wrapper flex flex-col items-center w-full">
         {events.map((event, index) => (
             <TimelineItem
                 key={index}
@@ -48,14 +49,16 @@ const Timeline = ({ events, loading }) => {
         ))}
 
         {isModalOpen && (
-            <Modal
-                isOpen={isModalOpen}
-                onClose={handleCloseModal}
-                date={selectedEvent?.date}
-            >
-              <h2 className="modal-title">{selectedEvent?.title}</h2>
-              <p>{`Time: ${selectedEvent?.time}`}</p>
-            </Modal>
+         <Modal
+         isOpen={isModalOpen}
+         onClose={handleCloseModal}
+         date={selectedEvent?.date}
+       >
+         {typeof selectedEvent?.summary === 'string'
+           ? selectedEvent.summary
+           : JSON.stringify(selectedEvent?.summary)}
+       </Modal>
+       
         )}
       </div>
   );
