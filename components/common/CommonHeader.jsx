@@ -10,6 +10,19 @@ export default function CommonHeader() {
     const router = useRouter();
     const pathname = usePathname(); // 현재 경로 가져오기
     const [active, setActive] = useState("/"); // 기본 선택 상태를 "/"로 설정
+    const getTodayDate = () => new Date().toLocaleDateString("en-CA");
+    const [selectedDate, setSelectedDate] = useState(() => {
+        if (typeof window !== "undefined") {
+            const storedDate = localStorage.getItem("selectedDate");
+            const todayDate = getTodayDate();
+            if (!storedDate || storedDate < todayDate){
+                localStorage.setItem("selectedDate", todayDate);
+                return todayDate;
+            }
+            return todayDate;
+        }
+        return new Date().toLocaleDateString("en-CA");
+    });
 
     // 날짜 클릭 이벤트 핸들러
     const handleDateClick = () => {
@@ -23,7 +36,7 @@ export default function CommonHeader() {
             .replace(/\. /g, "-")
             .replace(".", "")
             .trim(); // "yyyy.mm.dd" 형식을 "yyyy-mm-dd"로 변환
-        const searchParams = new URLSearchParams({ date: formattedDate });
+        const searchParams = new URLSearchParams({ date: selectedDate });
 
         router.push(`/chat?${searchParams.toString()}`);
     };

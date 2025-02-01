@@ -5,6 +5,7 @@ import ChatHeader from "@/components/chat/ChatHeader";
 import MessageList from "@/components/chat/MessageList";
 import { useSearchParams } from "next/navigation";
 import {supabase} from "@/lib/supabaseClient";
+import CommonHeader from "@/components/common/CommonHeader";
 
 const ChatPage = () => {
     const [messages, setMessages] = useState([]);
@@ -180,6 +181,7 @@ const ChatPage = () => {
 
     return (
         <div className="flex flex-col h-screen bg-white">
+            <CommonHeader />
             <ChatHeader date={date} />
             <div className="flex-1 overflow-y-auto">
                 <MessageList

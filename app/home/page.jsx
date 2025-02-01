@@ -5,6 +5,7 @@ import MyCalendar from "../../components/calendar/MyCalendar";
 import NavBar from "../../components/common/NavBar";
 import Timeline from "../../components/timeline/Timeline";
 import SkeletonLoader from "@/components/home/SkeletonLoader";
+import CommonHeader from "@/components/common/CommonHeader";
 
 export default function CalandarPage() {
     const getTodayDate = () => new Date().toLocaleDateString("en-CA");
@@ -80,12 +81,16 @@ export default function CalandarPage() {
     console.log(selectedDate)
 
     return (
-        <div className="flex flex-col min-h-[calc(100vh-64px)] w-full">
-            {/* ✅ CommonHeader 높이를 고려하여 min-h-[calc(100vh-HeaderHeight)] 적용 */}
-            <div className="flex flex-col items-center w-full min-h-[calc(100vh-64px)]">
+        <div className="flex flex-col min-h-[calc(100vh-64px)] w-full pt-12">
+            {/* ✅ CommonHeader */}
+            <CommonHeader />
+
+            {/* ✅ CommonHeader 높이를 고려하여 padding 추가 */}
+            <div className="flex flex-col items-center w-full min-h-[calc(100vh-64px)] pt-2">
+
                 {loading ? (
                     <div className="flex flex-col w-full items-center">
-                        <SkeletonLoader className="w-full max-w-md mt-4" />
+                        <SkeletonLoader className="w-full max-w-md mt-4"/>
                     </div>
                 ) : (
                     <div className="w-full flex flex-col items-center">
@@ -101,14 +106,12 @@ export default function CalandarPage() {
                             </div>
                         </div>
                     </div>
-
-
                 )}
-
             </div>
 
             {/* ✅ NavBar가 페이지 하단에 고정되도록 설정 */}
             <NavBar className="w-full fixed bottom-0"/>
         </div>
+
     );
 }
