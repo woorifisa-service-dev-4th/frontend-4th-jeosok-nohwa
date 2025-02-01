@@ -14,12 +14,13 @@ export default function CommonHeader() {
     const [selectedDate, setSelectedDate] = useState(() => {
         if (typeof window !== "undefined") {
             const storedDate = localStorage.getItem("selectedDate");
+            console.log(storedDate);
             const todayDate = getTodayDate();
-            if (!storedDate || storedDate < todayDate){
+            if (!storedDate){
                 localStorage.setItem("selectedDate", todayDate);
                 return todayDate;
             }
-            return todayDate;
+            return storedDate;
         }
         return new Date().toLocaleDateString("en-CA");
     });
