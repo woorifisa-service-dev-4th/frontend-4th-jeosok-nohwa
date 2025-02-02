@@ -16,10 +16,10 @@ const TimelineItem = ({ event, onClick }) => {
         <div className="flex items-center gap-2">
           <div className="w-2.5 h-2.5 bg-[#33C9AC] rounded-full self-start translate-y-1.5"></div>
 
-          <span className="text-gray-500 text-sm">{time}</span>
+          <span className="text-mainGray text-sm">{time}</span>
         </div>
       </div>
-      <div className="font-medium text-base text-mainGray flex items-center h-full px-2">
+      <div className="font-sm text-sm text-mainGray flex items-center h-full px-6">
         {title}
       </div>
 

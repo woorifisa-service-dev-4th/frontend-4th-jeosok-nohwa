@@ -4,13 +4,20 @@ import React, { useState, useEffect } from "react";
 import MyCalendar from "../../components/calendar/MyCalendar";
 import NavBar from "../../components/common/NavBar";
 import Timeline from "../../components/timeline/Timeline";
-import { supabase } from "@/lib/supabaseClient";
 import SkeletonLoader from "@/components/home/SkeletonLoader";
+import CommonHeader from "@/components/common/CommonHeader";
 
 export default function CalandarPage() {
+    const getTodayDate = () => new Date().toLocaleDateString("en-CA");
     const [selectedDate, setSelectedDate] = useState(() => {
         if (typeof window !== "undefined") {
-            return localStorage.getItem("selectedDate") || new Date().toLocaleDateString("en-CA");
+            const storedDate = localStorage.getItem("selectedDate");
+            const todayDate = getTodayDate();
+            if (!storedDate || storedDate < todayDate){
+                localStorage.setItem("selectedDate", todayDate);
+                return todayDate;
+            }
+            return todayDate;
         }
         return new Date().toLocaleDateString("en-CA");
     });
@@ -31,11 +38,16 @@ export default function CalandarPage() {
         const fetchEvents = async () => {
             setLoading(true);
             try {
-                const { data, error } = await supabase.from("chat_summaries").select("*");
-                if (error) throw error;
+                const response = await fetch("/api/events");
+                const result = await response.json();
+
+                if (!result.success) {
+                    console.error("API Error:", result.error);
+                    return;
+                }
 
                 setEvents(
-                    data.map((event) => ({
+                    result.events.map((event) => ({
                         date: event.chat_date,
                         time: event.created_at
                             ? new Date(event.created_at).toLocaleTimeString("en-GB", {
@@ -49,7 +61,7 @@ export default function CalandarPage() {
                     }))
                 );
             } catch (error) {
-                console.error("Error fetching data:", error.message);
+                console.error("Error fetching events:", error);
             } finally {
                 setLoading(false);
             }
@@ -58,6 +70,7 @@ export default function CalandarPage() {
         fetchEvents();
     }, []);
 
+
     const handleDateClick = (date) => {
         const formattedDate = date.toLocaleDateString("en-CA");
         setSelectedDate(formattedDate);
@@ -65,14 +78,19 @@ export default function CalandarPage() {
     };
 
     const filteredEvents = events.filter((event) => event.date === selectedDate);
+    console.log(selectedDate)
 
     return (
-        <div className="flex flex-col min-h-[calc(100vh-64px)] w-full">
-            {/* ✅ CommonHeader 높이를 고려하여 min-h-[calc(100vh-HeaderHeight)] 적용 */}
-            <div className="flex flex-col items-center w-full min-h-[calc(100vh-64px)]">
+        <div className="flex flex-col min-h-[calc(100vh-64px)] w-full pt-12">
+            {/* ✅ CommonHeader */}
+            <CommonHeader selectedDate={selectedDate} />
+
+            {/* ✅ CommonHeader 높이를 고려하여 padding 추가 */}
+            <div className="flex flex-col items-center w-full min-h-[calc(100vh-64px)] pt-2">
+
                 {loading ? (
                     <div className="flex flex-col w-full items-center">
-                        <SkeletonLoader className="w-full max-w-md mt-4" />
+                        <SkeletonLoader className="w-full max-w-md mt-4"/>
                     </div>
                 ) : (
                     <div className="w-full flex flex-col items-center">
@@ -88,14 +106,12 @@ export default function CalandarPage() {
                             </div>
                         </div>
                     </div>
-
-
                 )}
-
             </div>
 
             {/* ✅ NavBar가 페이지 하단에 고정되도록 설정 */}
             <NavBar className="w-full fixed bottom-0"/>
         </div>
+
     );
 }

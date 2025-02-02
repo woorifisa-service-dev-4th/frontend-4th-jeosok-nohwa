@@ -1,6 +1,6 @@
 import { OpenAI } from "openai";
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/lib/supabase";
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -59,7 +59,7 @@ export async function POST(request) {
                         content:
                             "유저의 주요 활동과 건강 습관을 1줄로 요약해주세요. 명사형으로 끝내지마.  \n" +
                             "명확하게 핵심만 담아야 합니다.\n" +
-                            "예: 오늘은 건강한 샐러드와 산책을 했어요!" +
+                            "예: 건강한 샐러드와 산책을 했어요!" +
                             "- 예: 유산소 운동은 했지만 단백질 섭취가 부족했어요.\n"
 
         },
@@ -124,7 +124,7 @@ export async function POST(request) {
         // ✅ Supabase에 요약 저장
         const { error: insertError } = await supabase
             .from("chat_summaries")
-            .upsert([{ owner_id, chat_date, title, summary, created_at: new Date().toISOString() }]);
+            .upsert([{ owner_id, chat_date, title, summary }]);
 
         if (insertError) {
             console.error("Supabase insert error:", insertError);

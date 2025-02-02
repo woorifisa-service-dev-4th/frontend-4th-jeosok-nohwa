@@ -1,6 +1,6 @@
 import { OpenAI } from "openai";
 import { NextResponse } from "next/server";
-import {supabase} from "@/lib/supabaseClient";
+import {supabase} from "@/lib/supabase";
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -214,5 +214,34 @@ export async function POST(request) {
                 headers: { "Content-Type": "application/json" },
             }
         );
+    }
+}
+
+
+export async function GET(request) {
+    try {
+        const url = new URL(request.url);
+        const dateParam = url.searchParams.get("date");
+        const userId = 1; // 현재 유저 ID (동적으로 변경 필요)
+
+        if (!dateParam) {
+            return NextResponse.json({ error: "Invalid date parameter" }, { status: 400 });
+        }
+
+        const formattedDate = dateParam;
+
+        const { data, error } = await supabase
+            .from("messages")
+            .select("*")
+            .eq("owner_id", userId)
+            .filter("chat_time", "gte", `${formattedDate} 00:00:00`)
+            .filter("chat_time", "lt", `${formattedDate} 23:59:59`)
+            .order("chat_time", { ascending: true });
+
+        if (error) throw error;
+
+        return NextResponse.json({ success: true, messages: data });
+    } catch (error) {
+        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 }

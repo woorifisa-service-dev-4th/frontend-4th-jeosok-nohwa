@@ -1,10 +1,11 @@
 'use client';
 import React, { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabaseClient";
 import ChatInput from "@/components/chat/ChatInput";
 import ChatHeader from "@/components/chat/ChatHeader";
 import MessageList from "@/components/chat/MessageList";
 import { useSearchParams } from "next/navigation";
+import {supabase} from "@/lib/supabaseClient";
+import CommonHeader from "@/components/common/CommonHeader";
 
 const ChatPage = () => {
     const [messages, setMessages] = useState([]);
@@ -20,20 +21,17 @@ const ChatPage = () => {
             return;
         }
 
-        const formattedDate = dateParam;
+        try {
+            const response = await fetch(`/api/chat?date=${dateParam}`);
+            const result = await response.json();
 
-        const { data, error } = await supabase
-            .from("messages")
-            .select("*")
-            .eq("owner_id", currentUserId)
-            .filter("chat_time", "gte", `${formattedDate} 00:00:00`)
-            .filter("chat_time", "lt", `${formattedDate} 23:59:59`)
-            .order("chat_time", { ascending: true });
-
-        if (error) {
-            console.error("Error fetching messages:", error);
-        } else {
-            setMessages(data);
+            if (result.success) {
+                setMessages(result.messages);
+            } else {
+                console.error("Error fetching messages:", result.error);
+            }
+        } catch (error) {
+            console.error("Fetch error:", error);
         }
     };
 
@@ -43,28 +41,45 @@ const ChatPage = () => {
         }
     }, [dateParam]);
 
+
+
     useEffect(() => {
-        const subscription = supabase
-            .channel("realtime:public:messages")
+        const channel = supabase.channel("realtime:public:chat_summaries")
             .on(
                 "postgres_changes",
-                {
-                    event: "INSERT",
-                    schema: "public",
-                    table: "messages",
-                    filter: `owner_id=eq.${currentUserId}`,
-                },
+                { event: "INSERT", schema: "public", table: "chat_summaries" },
                 (payload) => {
-                    console.log("Realtime new message:", payload.new);
-                    setMessages((prevMessages) => [...prevMessages, payload.new]);
+                    const { summary, chat_date, created_at } = payload.new;
+
+                    // ✅ `summary`가 없으면 아무 작업도 하지 않음
+                    if (!summary) return;
+                    if(chat_date !== dateParam) return;
+
+                    console.log("🟢 New summary received (CLIENT):", payload.new);
+
+
+                    const newMessage = {
+                        text: summary.trim(),
+                        is_user: false,
+                        owner_id: currentUserId,
+                        chat_time: chat_date,
+                        created_at: created_at,
+                    };
+
+                    setMessages((prevMessages) => [...prevMessages, newMessage]); // UI 업데이트
                 }
             )
             .subscribe();
 
         return () => {
-            supabase.removeChannel(subscription);
+            console.log("🔴 Unsubscribing from Supabase (CLIENT)");
+            supabase.removeChannel(channel);
         };
     }, []);
+
+
+
+
 
     useEffect(() => {
         console.log("Messages updated:", messages);
@@ -74,7 +89,7 @@ const ChatPage = () => {
         if (!message.trim()) return;
 
         const now = new Date();
-        const offset = 9 * 60 * 60 * 1000;
+        const offset = 9 * 60 * 60 * 1000; // KST 시간대 보정
         const kstDate = new Date(now.getTime() + offset);
 
         const isoString = kstDate.toISOString().replace("Z", "+09:00");
@@ -92,18 +107,30 @@ const ChatPage = () => {
             created_at: isoString,
         };
 
-        if(isUser){
+        if (isUser) {
             setMessages((prevMessages) => [...prevMessages, newMessage]);
         }
 
-        const { error } = await supabase.from("messages").insert([newMessage]);
+        try {
+            // ✅ 서버 API를 통해 메시지 저장
+            const response = await fetch("/api/messages", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newMessage),
+            });
 
-        if (error) {
-            console.error("Error sending message to DB:", error);
-        } else {
-            console.log("Message successfully sent to DB.");
+            const result = await response.json();
+
+            if (!result.success) {
+                console.error("Error sending message to API:", result.error);
+            } else {
+                console.log("Messages successfully sent to API.");
+            }
+        } catch (error) {
+            console.error("Error sending messages to API:", error);
         }
     };
+
 
     const getKSTChatTime = (date) => {
         const offset = 9 * 60 * 60 * 1000;
@@ -154,6 +181,7 @@ const ChatPage = () => {
 
     return (
         <div className="flex flex-col h-screen bg-white">
+            <CommonHeader />
             <ChatHeader date={date} />
             <div className="flex-1 overflow-y-auto">
                 <MessageList
