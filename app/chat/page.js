@@ -3,15 +3,20 @@ import React, { useState, useEffect } from "react";
 import ChatInput from "@/components/chat/ChatInput";
 import ChatHeader from "@/components/chat/ChatHeader";
 import MessageList from "@/components/chat/MessageList";
-import { useSearchParams } from "next/navigation";
 import {supabase} from "@/lib/supabaseClient";
 import CommonHeader from "@/components/common/CommonHeader";
 
 const ChatPage = () => {
     const [messages, setMessages] = useState([]);
+    const [dateParam, setDateParam] = useState(null);
     const currentUserId = 1;
-    const searchParams = useSearchParams();
-    const dateParam = searchParams.get("date");
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const urlParams = new URLSearchParams(window.location.search);
+            setDateParam(urlParams.get("date"));
+        }
+    }, []);
     const date = dateParam ? dateParam.replace(/-/g, ".") : "...";
 
 

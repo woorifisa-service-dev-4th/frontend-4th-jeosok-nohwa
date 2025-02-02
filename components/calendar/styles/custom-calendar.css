@@ -255,17 +255,17 @@
 
 /* ✅ 숫자는 고정, 네모 박스만 2px 아래로 이동 */
 .react-calendar__tile--active.today-highlight::before {
-                                   content: "";
-                                   position: absolute;
-                                   width: 55px;
-                                   height: 40px;
-                                   background-color: #D9F7F3 !important; /* 네모 박스 배경 추가 */
-                                   border-radius: 20%;
-                                   top: 50%;
-                                   left: 50%;
+  content: "";
+  position: absolute;
+  width: 55px;
+  height: 40px;
+  background-color: #D9F7F3 !important; /* 네모 박스 배경 추가 */
+  border-radius: 20%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -35%); /* 2px 아래로 이동 */
-                                   z-index: -1; /* 텍스트보다 뒤로 */
-                                 }
+  z-index: -1; /* 텍스트보다 뒤로 */
+}
 
 /* ✅ 오늘 날짜도 선택되었을 때 네모 박스 유지 */
 .react-calendar__tile--active.today-highlight::before {
