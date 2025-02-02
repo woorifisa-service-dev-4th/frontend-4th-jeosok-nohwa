@@ -8,16 +8,15 @@ import CommonHeader from "@/components/common/CommonHeader";
 
 const ChatPage = () => {
     const [messages, setMessages] = useState([]);
+    const [dateParam, setDateParam] = useState(null);
     const currentUserId = 1;
-    const getQueryParam = (param) => {
+
+    useEffect(() => {
         if (typeof window !== "undefined") {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
+            setDateParam(urlParams.get("date"));
         }
-        return null;
-    };
-
-    const dateParam = getQueryParam("date");
+    }, []);
     const date = dateParam ? dateParam.replace(/-/g, ".") : "...";
 
 
