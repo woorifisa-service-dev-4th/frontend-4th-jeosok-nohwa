@@ -1,43 +1,41 @@
 import React, { useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
 
 const SummarizeButton = ({ ownerId, chatDate, setMessages, messages, onSend }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isCompleted, setIsCompleted] = useState(false);
     const [lastSummaryIndex, setLastSummaryIndex] = useState(null);
 
+
     const handleSummarize = async () => {
         setIsLoading(true);
         try {
-            const { data, error } = await supabase
-                .from("chat_summaries")
-                .select("summary")
-                .eq("owner_id", ownerId)
-                .eq("chat_date", chatDate)
-                .single();
+            // ✅ 기존 요약 조회
+            const response = await fetch(`/api/summaries?owner_id=${ownerId}&chat_date=${chatDate}`);
+            const result = await response.json();
 
             let summaryText;
-            if (error || !data) {
+
+            if (!result.success || !result.summary) {
                 console.log("✅ 기존 요약 없음 → 새로 생성");
-                const response = await fetch("/api/chat/summarize", {
+
+                // ✅ 새 요약 요청
+                const createResponse = await fetch("/api/chat/summarize", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ owner_id: ownerId, chat_date: chatDate }),
                 });
 
-                const result = await response.json();
-                if (!response.ok || result.error) {
-                    console.error("❌ 요약 실패:", result.error);
+                const createResult = await createResponse.json();
+                if (!createResponse.ok || createResult.error) {
+                    console.error("❌ 요약 생성 실패:", createResult.error);
                     setIsLoading(false);
                     return;
                 }
-                summaryText = result.summary;
+                summaryText = createResult.summary;
             } else {
                 console.log("✅ 기존 요약 있음 → 불러오기");
-                summaryText = data.summary;
+                summaryText = result.summary;
             }
-
-            //onSend(summaryText.trim(), false); // ✅ 메시지 추가
 
             // ✅ UI에 즉시 반영
             const summaryMessage = {
@@ -50,8 +48,12 @@ const SummarizeButton = ({ ownerId, chatDate, setMessages, messages, onSend }) =
                 isSummary: true,
             };
 
-            setMessages((prevMessages) => [...prevMessages, summaryMessage]);
-            setLastSummaryIndex(messages.length);
+            //setMessages((prevMessages) => [...prevMessages, summaryMessage]);
+            //setLastSummaryIndex(messages.length);
+
+            // ✅ 메시지 전송
+            await onSend(summaryText, false);
+
             setIsCompleted(true);
         } catch (error) {
             console.error("❌ API 호출 에러:", error);
@@ -59,6 +61,7 @@ const SummarizeButton = ({ ownerId, chatDate, setMessages, messages, onSend }) =
             setIsLoading(false);
         }
     };
+
 
     return (
         <button

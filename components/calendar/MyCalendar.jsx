@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '@/components/calendar/styles/custom-calendar.css';
-import { supabase } from "@/lib/supabaseClient";
 
 function MyCalendar({ onClickDay = () => {}, ...props }) {
     const [value, onChange] = useState(new Date());
@@ -20,21 +19,22 @@ function MyCalendar({ onClickDay = () => {}, ...props }) {
     today.setHours(today.getHours() + 9); // UTC → KST 변환
     const formattedDate = today.toISOString().split('T')[0]; // YYYY-MM-DD
 
-    // Supabase에서 마킹할 날짜 가져오기 (한국 시간 그대로 사용)
     useEffect(() => {
         const fetchMarkedDates = async () => {
-            const { data, error } = await supabase
-                .from('chat_summaries')
-                .select('chat_date');
+            try {
+                const response = await fetch("/api/marked-dates");
+                const result = await response.json();
 
-            if (error) {
-                console.error('Supabase Error:', error);
-            } else {
+                if (!result.success) {
+                    console.error("Supabase API Error:", result.error);
+                    return;
+                }
+
                 // Supabase의 `chat_date`는 KST로 저장되어 있으므로 변환 없이 그대로 사용
-                const dates = data.map(item => item.chat_date);
-
-                console.log("📌 마킹된 날짜들 (Supabase KST 기준):", dates); // 확인용 로그
-                setMarkedDates(dates);
+                console.log("📌 마킹된 날짜들 (Supabase KST 기준):", result.dates);
+                setMarkedDates(result.dates);
+            } catch (error) {
+                console.error("Error fetching marked dates:", error);
             }
         };
 
