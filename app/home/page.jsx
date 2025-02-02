@@ -83,7 +83,7 @@ export default function CalandarPage() {
     return (
         <div className="flex flex-col min-h-[calc(100vh-64px)] w-full pt-12">
             {/* ✅ CommonHeader */}
-            <CommonHeader />
+            <CommonHeader selectedDate={selectedDate} />
 
             {/* ✅ CommonHeader 높이를 고려하여 padding 추가 */}
             <div className="flex flex-col items-center w-full min-h-[calc(100vh-64px)] pt-2">
