@@ -123,7 +123,7 @@
 /* ✅ 오늘 날짜는 항상 청록색 & bold */
 .react-calendar__tile--now,
 .today-highlight {
-  background-color: #D9F7F3 !important;
+  background: white !important;
   color: #00bfa5 !important;
   font-weight: bold !important;
   position: relative;
@@ -138,7 +138,7 @@
 
 /* ✅ 오늘 날짜가 선택되었을 때도 청록색 유지 */
 .react-calendar__tile--active.today-highlight {
-  background-color: #D9F7F3 !important;
+
   color: #00bfa5 !important;
   font-weight: bold !important;
   background-color: transparent !important;
