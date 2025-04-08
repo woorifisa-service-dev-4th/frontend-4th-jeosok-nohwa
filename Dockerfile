@@ -27,5 +27,6 @@ COPY --from=builder /app/package.json ./
 COPY --from=builder /app/public ./public
 
 # 7. 포트 및 실행 명령어 설정
-EXPOSE 3000 #외부에 노출할 포트 지정
+# 외부에 노출할 포트 지정
+EXPOSE 3000
 CMD ["npm", "run", "start"]
